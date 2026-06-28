@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mesoutils — Vos outils en ligne gratuits</title>
+<meta name="description" content="mesoutils.com : convertisseur PDF, compresseur d'images, générateur de QR code, calculateur de pourcentage, convertisseur de devises et générateur de mots de passe. 100% gratuit et directement dans votre navigateur.">
+
+<!-- Polices -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Librairies (PDF + QR) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!--
+  ============================================================
+  EMPLACEMENT GOOGLE ADSENSE — décommentez et remplacez par votre code
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXX" crossorigin="anonymous"></script>
+  ============================================================
+-->
+
+<style>
+  :root{
+    --bg:#F5F5FA;
+    --surface:#FFFFFF;
+    --ink:#15151F;
+    --muted:#6A6A7C;
+    --line:#E6E6EF;
+    --brand:#4F46E5;
+    --brand-soft:#EEEDFD;
+    /* couleurs des outils */
+    --c-pdf:#E5484D;
+    --c-img:#0EA5E9;
+    --c-qr:#7C3AED;
+    --c-pct:#F59E0B;
+    --c-cur:#10B981;
+    --c-pwd:#EC4899;
+    --c-trn:#0D9488;
+    --radius:16px;
+    --shadow:0 1px 2px rgba(20,20,40,.04), 0 8px 24px rgba(20,20,40,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.brand{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
+  a{color:inherit}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px}
+
+  /* Header */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(245,245,250,.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;cursor:pointer}
+  .brand .dot{
+    width:30px;height:30px;border-radius:9px;
+    background:var(--brand);position:relative;flex:none;
+    box-shadow:inset 0 0 0 4px rgba(255,255,255,.25);
+  }
+  .brand .dot::after{content:"";position:absolute;inset:9px;border-radius:3px;background:#fff;opacity:.9}
+  .brand small{color:var(--muted);font-weight:500;font-family:'Inter'}
+  .nav-links{display:flex;gap:6px}
+  .nav-links a{
+    font-size:14px;font-weight:500;color:var(--muted);
+    padding:8px 12px;border-radius:9px;text-decoration:none;transition:.15s;
+  }
+  .nav-links a:hover{background:var(--surface);color:var(--ink)}
+
+  /* Ad slot */
+  .ad{
+    margin:18px auto;max-width:980px;
+    border:1px dashed var(--line);border-radius:12px;
+    min-height:90px;display:flex;align-items:center;justify-content:center;
+    color:#B3B3C2;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    background:repeating-linear-gradient(45deg,#fafafd,#fafafd 10px,#f4f4fa 10px,#f4f4fa 20px);
+  }
+
+  /* Hero */
+  .hero{padding:48px 0 8px;text-align:center}
+  .hero .eyebrow{
+    display:inline-block;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--brand);background:var(--brand-soft);padding:6px 12px;border-radius:100px;margin-bottom:18px;
+  }
+  .hero h1{font-size:clamp(30px,6vw,46px);line-height:1.05;font-weight:700}
+  .hero p{max-width:540px;margin:14px auto 0;color:var(--muted);font-size:17px}
+
+  /* Toolbox grid */
+  .grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+    padding:34px 0 10px;
+  }
+  .tool-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;text-align:left;cursor:pointer;transition:.18s ease;
+    display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;
+  }
+  .tool-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:transparent}
+  .tool-card .chip{
+    width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+    color:#fff;flex:none;
+  }
+  .tool-card .chip svg{width:24px;height:24px}
+  .tool-card h3{font-size:17px;font-weight:600}
+  .tool-card p{font-size:13.5px;color:var(--muted);margin-top:-6px}
+  .tool-card .go{font-size:13px;font-weight:600;margin-top:auto;display:flex;align-items:center;gap:6px;opacity:.7}
+  .tool-card:hover .go{opacity:1}
+  .tool-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent);opacity:0;transition:.18s}
+  .tool-card:hover::before{opacity:1}
+
+  /* Tool panel (vue détail) */
+  .panel{display:none;padding:30px 0 10px;animation:fade .25s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .back{
+    display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:500;color:var(--muted);
+    background:none;border:none;cursor:pointer;padding:8px 0;margin-bottom:6px;
+  }
+  .back:hover{color:var(--ink)}
+  .panel-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+  .panel-head .chip{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff}
+  .panel-head .chip svg{width:22px;height:22px}
+  .panel-head h2{font-size:24px}
+  .panel-sub{color:var(--muted);margin-bottom:22px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+
+  /* Form bits */
+  label{display:block;font-size:13.5px;font-weight:600;margin:0 0 7px}
+  input[type=text],input[type=number],select,textarea{
+    width:100%;font-family:inherit;font-size:15px;color:var(--ink);
+    padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:#fbfbfe;transition:.15s;
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff;box-shadow:0 0 0 3px var(--brand-soft)}
+  textarea{resize:vertical;min-height:90px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .field{margin-bottom:16px}
+  .btn{
+    font-family:inherit;font-size:15px;font-weight:600;color:#fff;background:var(--brand);
+    border:none;border-radius:11px;padding:12px 20px;cursor:pointer;transition:.15s;
+  }
+  .btn:hover{filter:brightness(1.08)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn.ghost:hover{background:#fafafd}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+  .result{
+    margin-top:18px;padding:16px;border-radius:12px;background:var(--brand-soft);
+    font-size:15px;color:var(--ink);display:none;
+  }
+  .result.show{display:block}
+  .result b{font-family:'Space Grotesk';font-size:22px}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:6px}
+
+  /* Password specific */
+  .pwd-out{
+    display:flex;gap:10px;align-items:center;background:#15151F;color:#fff;border-radius:12px;
+    padding:14px 16px;font-family:'Space Grotesk';font-size:18px;word-break:break-all;
+  }
+  .pwd-out span{flex:1}
+  .copy{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;font-family:inherit;flex:none}
+  .copy:hover{background:rgba(255,255,255,.22)}
+  input[type=range]{width:100%;accent-color:var(--brand)}
+  .checks{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}
+  .checks label{display:flex;align-items:center;gap:8px;font-weight:500;font-size:14px;margin:0;cursor:pointer}
+  .checks input{width:auto}
+  .meter{height:8px;border-radius:100px;background:var(--line);overflow:hidden;margin-top:14px}
+  .meter span{display:block;height:100%;width:0;transition:.3s;border-radius:100px}
+
+  /* drop zone */
+  .drop{
+    border:2px dashed var(--line);border-radius:14px;padding:34px;text-align:center;
+    color:var(--muted);cursor:pointer;transition:.15s;background:#fbfbfe;
+  }
+  .drop:hover,.drop.over{border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
+  .drop strong{color:var(--ink)}
+  .preview{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .preview img{width:74px;height:74px;object-fit:cover;border-radius:9px;border:1px solid var(--line)}
+  #qrcode{display:flex;justify-content:center;margin-top:20px}
+  #qrcode img,#qrcode canvas{border-radius:10px;border:1px solid var(--line);padding:8px;background:#fff}
+
+  /* Footer */
+  footer{margin-top:50px;border-top:1px solid var(--line);background:var(--surface)}
+  .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;padding:34px 0}
+  .foot p{color:var(--muted);font-size:13.5px;max-width:320px}
+  .foot-links{display:flex;flex-direction:column;gap:8px;font-size:13.5px}
+  .foot-links a{color:var(--muted);text-decoration:none}
+  .foot-links a:hover{color:var(--ink)}
+  .copyright{text-align:center;padding:16px;color:#B3B3C2;font-size:12.5px;border-top:1px solid var(--line)}
+
+  @media(max-width:720px){
+    .grid{grid-template-columns:1fr 1fr;gap:12px}
+    .row{grid-template-columns:1fr}
+    .nav-links{display:none}
+  }
+  @media(max-width:460px){.grid{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand" onclick="showHome()">
+      <span class="dot"></span>
+      mesoutils<small>.com</small>
+    </div>
+    <nav class="nav-links">
+      <a onclick="openTool('pdf')">PDF</a>
+      <a onclick="openTool('img')">Images</a>
+      <a onclick="openTool('qr')">QR Code</a>
+      <a onclick="openTool('pct')">Pourcentage</a>
+      <a onclick="openTool('cur')">Devises</a>
+      <a onclick="openTool('pwd')">Mot de passe</a>
+      <a onclick="openTool('trn')">Traduction</a>
+    </nav>
+  </div>
+</header>
+
+<!-- EMPLACEMENT PUB (haut de page) -->
+<div class="ad">Espace publicitaire (AdSense)</div>
+
+<main class="wrap">
+
+  <!-- ACCUEIL -->
+  <section id="home">
+    <div class="hero">
+      <span class="eyebrow">100% gratuit · sans inscription</span>
+      <h1>Tous vos outils du quotidien,<br>au même endroit.</h1>
+      <p>Six outils rapides qui fonctionnent directement dans votre navigateur. Vos fichiers ne quittent jamais votre appareil.</p>
+    </div>
+
+    <div class="grid">
+      <button class="tool-card" style="--accent:var(--c-pdf)" onclick="openTool('pdf')">
+        <span class="chip" style="background:var(--c-pdf)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></span>
+        <h3>Convertisseur PDF</h3>
+        <p>Transformez vos images (JPG, PNG) en un fichier PDF.</p>
+        <span class="go">Ouvrir →</span>
+      </button>
+
+      <button class="tool-card" style="--accent:var(--c-img)" onclick="openTool('img')">
+        <span class="chip" style="background:var(--c-img)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L5 21"/></svg></span>
+        <h3>Compresseur d'images</h3>
+        <p>Réduisez le poids de vos photos sans perdre la qualité.</p>
+        <span class="go">Ouvrir →</span>
+      </button>
+
+      <button class="tool-card" style="--accent:var(--c-qr)" onclick="openTool('qr')">
+        <span class="chip" style="background:var(--c-qr)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M21 14v.01M14 21h.01M17 21h4v-4"/></svg></span>
+        <h3>Générateur QR Code</h3>
+        <p>Créez un QR code pour un lien, un texte ou un wifi.</p>
+        <span class="go">Ouvrir →</span>
+      </button>
+
+      <button class="tool-card" style="--accent:var(--c-pct)" onclick="openTool('pct')">
+        <span class="chip" style="background:var(--c-pct)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span>
+        <h3>Calcul de pourcentage</h3>
+        <p>Pourcentage, remise, augmentation, TVA… en un clic.</p>
+        <span class="go">Ouvrir →</span>
+      </button>
+
+      <button class="tool-card" style="--accent:var(--c-cur)" onclick="openTool('cur')">
+        <span class="chip" style="background:var(--c-cur)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v2M12 16v2"/></svg></span>
+        <h3>Convertisseur de devises</h3>
+        <p>Taux de change en temps réel entre 30+ monnaies.</p>
+        <span class="go">Ouvrir →</span>
+      </button>
+
+      <button class="tool-card" style="--accent:var(--c-pwd)" onclick="openTool('pwd')">
+        <span class="chip" style="background:var(--c-pwd)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <h3>Générateur de mots de passe</h3>
+        <p>Créez des mots de passe forts et sécurisés.</p>
+        <span class="go">Ouvrir →</span>
+      </button>
+
+      <button class="tool-card" style="--accent:var(--c-trn)" onclick="openTool('trn')">
+        <span class="chip" style="background:var(--c-trn)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg></span>
+        <h3>Traducteur</h3>
+        <p>Traduisez entre français, anglais et allemand.</p>
+        <span class="go">Ouvrir →</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== PDF ===== -->
+  <section class="panel" id="panel-pdf">
+    <button class="back" onclick="showHome()">← Retour aux outils</button>
+    <div class="panel-head"><span class="chip" style="background:var(--c-pdf)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><h2>Images en PDF</h2></div>
+    <p class="panel-sub">Sélectionnez une ou plusieurs images, elles seront regroupées dans un seul PDF.</p>
+    <div class="card">
+      <div class="drop" id="pdf-drop">Cliquez ou glissez vos images ici<br><strong>JPG, PNG, WebP</strong></div>
+      <input type="file" id="pdf-input" accept="image/*" multiple hidden>
+      <div class="preview" id="pdf-preview"></div>
+      <div class="btn-row" style="margin-top:18px">
+        <button class="btn" onclick="makePdf()">Générer le PDF</button>
+        <button class="btn ghost" onclick="clearPdf()">Effacer</button>
+      </div>
+      <p class="hint">Vos images sont traitées sur votre appareil et ne sont jamais envoyées sur internet.</p>
+    </div>
+  </section>
+
+  <!-- ===== IMAGE COMPRESS ===== -->
+  <section class="panel" id="panel-img">
+    <button class="back" onclick="showHome()">← Retour aux outils</button>
+    <div class="panel-head"><span class="chip" style="background:var(--c-img)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L5 21"/></svg></span><h2>Compresseur d'images</h2></div>
+    <p class="panel-sub">Réduisez le poids d'une photo en ajustant la qualité.</p>
+    <div class="card">
+      <div class="drop" id="img-drop">Cliquez ou glissez une image ici<br><strong>JPG, PNG, WebP</strong></div>
+      <input type="file" id="img-input" accept="image/*" hidden>
+      <div class="field" style="margin-top:18px">
+        <label>Qualité : <span id="img-qval">80</span>%</label>
+        <input type="range" id="img-quality" min="10" max="100" value="80">
+      </div>
+      <div class="preview" id="img-preview"></div>
+      <div id="img-stats" class="result"></div>
+      <div class="btn-row" style="margin-top:18px">
+        <button class="btn" id="img-dl" onclick="downloadImg()" disabled>Télécharger l'image compressée</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== QR ===== -->
+  <section class="panel" id="panel-qr">
+    <button class="back" onclick="showHome()">← Retour aux outils</button>
+    <div class="panel-head"><span class="chip" style="background:var(--c-qr)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span><h2>Générateur de QR Code</h2></div>
+    <p class="panel-sub">Entrez un lien ou un texte, votre QR code est créé instantanément.</p>
+    <div class="card">
+      <div class="field">
+        <label>Texte ou lien</label>
+        <textarea id="qr-text" placeholder="https://exemple.com ou n'importe quel texte">https://mesoutils.com</textarea>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Taille</label>
+          <select id="qr-size"><option value="200">Petit (200px)</option><option value="300" selected>Moyen (300px)</option><option value="500">Grand (500px)</option></select>
+        </div>
+        <div class="field">
+          <label>Couleur</label>
+          <input type="color" id="qr-color" value="#15151F" style="height:44px;padding:4px">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="makeQr()">Générer</button>
+        <button class="btn ghost" id="qr-dl" onclick="downloadQr()" disabled>Télécharger (PNG)</button>
+      </div>
+      <div id="qrcode"></div>
+    </div>
+  </section>
+
+  <!-- ===== PERCENTAGE ===== -->
+  <section class="panel" id="panel-pct">
+    <button class="back" onclick="showHome()">← Retour aux outils</button>
+    <div class="panel-head"><span class="chip" style="background:var(--c-pct)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span><h2>Calcul de pourcentage</h2></div>
+    <p class="panel-sub">Choisissez le type de calcul dont vous avez besoin.</p>
+    <div class="card">
+      <div class="field">
+        <label>Type de calcul</label>
+        <select id="pct-mode" onchange="pctLabels()">
+          <option value="of">Combien font X % de Y ?</option>
+          <option value="is">X représente quel % de Y ?</option>
+          <option value="change">Variation en % entre deux valeurs</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="field"><label id="pct-l1">Pourcentage (%)</label><input type="number" id="pct-a" placeholder="20"></div>
+        <div class="field"><label id="pct-l2">Valeur</label><input type="number" id="pct-b" placeholder="150"></div>
+      </div>
+      <button class="btn" onclick="calcPct()">Calculer</button>
+      <div class="result" id="pct-res"></div>
+    </div>
+  </section>
+
+  <!-- ===== CURRENCY ===== -->
+  <section class="panel" id="panel-cur">
+    <button class="back" onclick="showHome()">← Retour aux outils</button>
+    <div class="panel-head"><span class="chip" style="background:var(--c-cur)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/></svg></span><h2>Convertisseur de devises</h2></div>
+    <p class="panel-sub">Taux de change actualisés (source : Frankfurter / BCE).</p>
+    <div class="card">
+      <div class="field"><label>Montant</label><input type="number" id="cur-amount" value="100"></div>
+      <div class="row">
+        <div class="field"><label>De</label><select id="cur-from"></select></div>
+        <div class="field"><label>Vers</label><select id="cur-to"></select></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="convertCur()">Convertir</button>
+        <button class="btn ghost" onclick="swapCur()">↔ Inverser</button>
+      </div>
+      <div class="result" id="cur-res"></div>
+    </div>
+  </section>
+
+  <!-- ===== PASSWORD ===== -->
+  <section class="panel" id="panel-pwd">
+    <button class="back" onclick="showHome()">← Retour aux outils</button>
+    <div class="panel-head"><span class="chip" style="background:var(--c-pwd)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><h2>Générateur de mots de passe</h2></div>
+    <p class="panel-sub">Créez un mot de passe robuste et impossible à deviner.</p>
+    <div class="card">
+      <div class="pwd-out"><span id="pwd-val">cliquez sur Générer</span><button class="copy" onclick="copyPwd()">Copier</button></div>
+      <div class="meter"><span id="pwd-meter"></span></div>
+      <p class="hint" id="pwd-strength" style="margin-bottom:14px">—</p>
+      <div class="field">
+        <label>Longueur : <span id="pwd-len">16</span> caractères</label>
+        <input type="range" id="pwd-length" min="6" max="40" value="16" oninput="document.getElementById('pwd-len').textContent=this.value">
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" id="pwd-upper" checked> Majuscules (A-Z)</label>
+        <label><input type="checkbox" id="pwd-lower" checked> Minuscules (a-z)</label>
+        <label><input type="checkbox" id="pwd-num" checked> Chiffres (0-9)</label>
+        <label><input type="checkbox" id="pwd-sym" checked> Symboles (!@#$)</label>
+      </div>
+      <button class="btn" onclick="makePwd()">Générer le mot de passe</button>
+    </div>
+  </section>
+
+  <!-- ===== TRANSLATOR ===== -->
+  <section class="panel" id="panel-trn">
+    <button class="back" onclick="showHome()">← Retour aux outils</button>
+    <div class="panel-head"><span class="chip" style="background:var(--c-trn)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg></span><h2>Traducteur</h2></div>
+    <p class="panel-sub">Traduisez instantanément entre le français, l'anglais et l'allemand.</p>
+    <div class="card">
+      <div class="row">
+        <div class="field">
+          <label>De</label>
+          <select id="trn-from" onchange="trnCheck()">
+            <option value="fr">Français</option>
+            <option value="en" selected>Anglais</option>
+            <option value="de">Allemand</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Vers</label>
+          <select id="trn-to" onchange="trnCheck()">
+            <option value="fr" selected>Français</option>
+            <option value="en">Anglais</option>
+            <option value="de">Allemand</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Texte à traduire</label>
+        <textarea id="trn-src" placeholder="Tapez votre texte ici..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="translateText()">Traduire</button>
+        <button class="btn ghost" onclick="swapTrn()">↔ Inverser les langues</button>
+      </div>
+      <div class="field" style="margin-top:18px">
+        <label>Traduction <button class="copy" style="background:var(--line);color:var(--ink);margin-left:6px" onclick="copyTrn()">Copier</button></label>
+        <textarea id="trn-out" placeholder="Le résultat apparaîtra ici..." readonly></textarea>
+      </div>
+      <p class="hint">Traduction fournie par une API gratuite. Une connexion internet est nécessaire.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- EMPLACEMENT PUB (bas de page) -->
+<div class="ad">Espace publicitaire (AdSense)</div>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="brand" style="margin-bottom:10px"><span class="dot"></span>mesoutils<small>.com</small></div>
+      <p>Des outils en ligne gratuits, rapides et respectueux de votre vie privée. Tout fonctionne dans votre navigateur.</p>
+    </div>
+    <div class="foot-links">
+      <strong style="color:var(--ink);font-size:13.5px">Outils</strong>
+      <a onclick="openTool('pdf')">Convertisseur PDF</a>
+      <a onclick="openTool('img')">Compresseur d'images</a>
+      <a onclick="openTool('qr')">Générateur QR Code</a>
+      <a onclick="openTool('pwd')">Mots de passe</a>
+      <a onclick="openTool('trn')">Traducteur</a>
+    </div>
+    <div class="foot-links">
+      <strong style="color:var(--ink);font-size:13.5px">Le site</strong>
+      <a href="about.html">À propos</a>
+      <a href="privacy.html">Politique de confidentialité</a>
+      <a href="contact.html">Contact</a>
+      <a href="guides.html">Guides pratiques</a>
+    </div>
+  </div>
+  <div class="copyright">© 2026 mesoutils.com — Tous droits réservés.</div>
+</footer>
+
+<script>
+/* ---------- Navigation ---------- */
+function showHome(){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('home').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function openTool(id){
+  document.getElementById('home').style.display='none';
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- 1. PDF (images -> PDF) ---------- */
+let pdfFiles=[];
+const pdfDrop=document.getElementById('pdf-drop');
+const pdfInput=document.getElementById('pdf-input');
+pdfDrop.onclick=()=>pdfInput.click();
+pdfInput.onchange=e=>addPdfFiles(e.target.files);
+['dragover','dragleave','drop'].forEach(ev=>pdfDrop.addEventListener(ev,e=>{
+  e.preventDefault();pdfDrop.classList.toggle('over',ev==='dragover');
+  if(ev==='drop')addPdfFiles(e.dataTransfer.files);
+}));
+function addPdfFiles(files){
+  for(const f of files){if(f.type.startsWith('image/'))pdfFiles.push(f);}
+  renderPdfPreview();
+}
+function renderPdfPreview(){
+  const box=document.getElementById('pdf-preview');box.innerHTML='';
+  pdfFiles.forEach(f=>{const img=document.createElement('img');img.src=URL.createObjectURL(f);box.appendChild(img);});
+}
+function clearPdf(){pdfFiles=[];renderPdfPreview();}
+function makePdf(){
+  if(!pdfFiles.length){alert('Ajoutez au moins une image.');return;}
+  const {jsPDF}=window.jspdf;const doc=new jsPDF();let i=0;
+  const next=()=>{
+    if(i>=pdfFiles.length){doc.save('mesoutils.pdf');return;}
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        const pw=doc.internal.pageSize.getWidth(),ph=doc.internal.pageSize.getHeight();
+        const r=Math.min(pw/img.width,ph/img.height);
+        const w=img.width*r,h=img.height*r;
+        if(i>0)doc.addPage();
+        doc.addImage(e.target.result,'JPEG',(pw-w)/2,(ph-h)/2,w,h);
+        i++;next();
+      };
+      img.src=e.target.result;
+    };
+    reader.readAsDataURL(pdfFiles[i]);
+  };
+  next();
+}
+
+/* ---------- 2. Image compressor ---------- */
+let imgBlob=null,imgName='image';
+const imgDrop=document.getElementById('img-drop'),imgInput=document.getElementById('img-input');
+const imgQ=document.getElementById('img-quality');
+imgDrop.onclick=()=>imgInput.click();
+imgInput.onchange=e=>loadImg(e.target.files[0]);
+imgQ.oninput=()=>{document.getElementById('img-qval').textContent=imgQ.value;if(window._imgSource)compressImg();};
+['dragover','dragleave','drop'].forEach(ev=>imgDrop.addEventListener(ev,e=>{
+  e.preventDefault();imgDrop.classList.toggle('over',ev==='dragover');
+  if(ev==='drop')loadImg(e.dataTransfer.files[0]);
+}));
+function loadImg(file){
+  if(!file||!file.type.startsWith('image/'))return;
+  imgName=file.name.replace(/\.[^.]+$/,'');
+  window._origSize=file.size;
+  const r=new FileReader();
+  r.onload=e=>{const im=new Image();im.onload=()=>{window._imgSource=im;compressImg();};im.src=e.target.result;};
+  r.readAsDataURL(file);
+}
+function compressImg(){
+  const im=window._imgSource;const c=document.createElement('canvas');
+  c.width=im.width;c.height=im.height;c.getContext('2d').drawImage(im,0,0);
+  c.toBlob(b=>{
+    imgBlob=b;
+    document.getElementById('img-preview').innerHTML='<img src="'+URL.createObjectURL(b)+'">';
+    const stats=document.getElementById('img-stats');
+    const gain=Math.max(0,Math.round((1-b.size/window._origSize)*100));
+    stats.innerHTML='Original : <b>'+fmtSize(window._origSize)+'</b> → Compressé : <b>'+fmtSize(b.size)+'</b> &nbsp; (-'+gain+'%)';
+    stats.classList.add('show');
+    document.getElementById('img-dl').disabled=false;
+  },'image/jpeg',imgQ.value/100);
+}
+function downloadImg(){if(!imgBlob)return;const a=document.createElement('a');a.href=URL.createObjectURL(imgBlob);a.download=imgName+'-compresse.jpg';a.click();}
+function fmtSize(b){return b<1024?b+' o':b<1048576?(b/1024).toFixed(1)+' Ko':(b/1048576).toFixed(2)+' Mo';}
+
+/* ---------- 3. QR code ---------- */
+let qrObj=null;
+function makeQr(){
+  const text=document.getElementById('qr-text').value.trim();
+  if(!text){alert('Entrez un texte ou un lien.');return;}
+  const size=+document.getElementById('qr-size').value;
+  const color=document.getElementById('qr-color').value;
+  document.getElementById('qrcode').innerHTML='';
+  qrObj=new QRCode(document.getElementById('qrcode'),{text,width:size,height:size,colorDark:color,colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+  setTimeout(()=>document.getElementById('qr-dl').disabled=false,150);
+}
+function downloadQr(){
+  const cv=document.querySelector('#qrcode canvas');if(!cv)return;
+  const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='qrcode-mesoutils.png';a.click();
+}
+
+/* ---------- 4. Percentage ---------- */
+function pctLabels(){
+  const m=document.getElementById('pct-mode').value;
+  const l1=document.getElementById('pct-l1'),l2=document.getElementById('pct-l2');
+  if(m==='of'){l1.textContent='Pourcentage (%)';l2.textContent='Valeur';}
+  if(m==='is'){l1.textContent='Valeur';l2.textContent='Total';}
+  if(m==='change'){l1.textContent='Valeur de départ';l2.textContent='Valeur d\'arrivée';}
+}
+function calcPct(){
+  const a=parseFloat(document.getElementById('pct-a').value);
+  const b=parseFloat(document.getElementById('pct-b').value);
+  const m=document.getElementById('pct-mode').value;
+  const res=document.getElementById('pct-res');
+  if(isNaN(a)||isNaN(b)){alert('Entrez deux valeurs.');return;}
+  let out='';
+  if(m==='of')out=a+' % de '+b+' = <b>'+round(a*b/100)+'</b>';
+  if(m==='is')out=a+' représente <b>'+round(a/b*100)+' %</b> de '+b;
+  if(m==='change'){const d=round((b-a)/Math.abs(a)*100);out='Variation : <b>'+(d>=0?'+':'')+d+' %</b>';}
+  res.innerHTML=out;res.classList.add('show');
+}
+function round(n){return Math.round(n*100)/100;}
+
+/* ---------- 5. Currency ---------- */
+const CURRENCIES=['EUR','USD','GBP','CHF','CAD','AUD','JPY','CNY','INR','BRL','ZAR','MXN','SGD','HKD','SEK','NOK','DKK','PLN','TRY','NZD','KRW','THB','MYR','IDR','PHP','CZK','HUF','RON','ILS','BGN','ISK'];
+function fillCur(){
+  const from=document.getElementById('cur-from'),to=document.getElementById('cur-to');
+  CURRENCIES.forEach(c=>{from.add(new Option(c,c));to.add(new Option(c,c));});
+  from.value='EUR';to.value='USD';
+}
+function swapCur(){
+  const f=document.getElementById('cur-from'),t=document.getElementById('cur-to');
+  [f.value,t.value]=[t.value,f.value];convertCur();
+}
+async function convertCur(){
+  const amount=parseFloat(document.getElementById('cur-amount').value);
+  const from=document.getElementById('cur-from').value,to=document.getElementById('cur-to').value;
+  const res=document.getElementById('cur-res');
+  if(isNaN(amount)){alert('Entrez un montant.');return;}
+  res.classList.add('show');res.innerHTML='Conversion en cours…';
+  if(from===to){res.innerHTML=amount+' '+from+' = <b>'+amount+' '+to+'</b>';return;}
+  try{
+    const r=await fetch('https://api.frankfurter.app/latest?amount='+amount+'&from='+from+'&to='+to);
+    const d=await r.json();
+    const val=d.rates[to];
+    res.innerHTML=amount+' '+from+' = <b>'+val.toLocaleString('fr-FR',{maximumFractionDigits:2})+' '+to+'</b><br><span class="hint">Taux du '+d.date+'</span>';
+  }catch(e){
+    res.innerHTML='Impossible de récupérer le taux. Vérifiez votre connexion internet.';
+  }
+}
+
+/* ---------- 6. Password ---------- */
+function makePwd(){
+  const len=+document.getElementById('pwd-length').value;
+  let set='';
+  if(document.getElementById('pwd-upper').checked)set+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if(document.getElementById('pwd-lower').checked)set+='abcdefghijklmnopqrstuvwxyz';
+  if(document.getElementById('pwd-num').checked)set+='0123456789';
+  if(document.getElementById('pwd-sym').checked)set+='!@#$%^&*()-_=+[]{}?';
+  if(!set){alert('Cochez au moins une option.');return;}
+  let pwd='';const arr=new Uint32Array(len);crypto.getRandomValues(arr);
+  for(let i=0;i<len;i++)pwd+=set[arr[i]%set.length];
+  document.getElementById('pwd-val').textContent=pwd;
+  scorePwd(pwd,set.length);
+}
+function scorePwd(pwd,poolSize){
+  const entropy=pwd.length*Math.log2(poolSize);
+  const m=document.getElementById('pwd-meter'),t=document.getElementById('pwd-strength');
+  let pct,color,label;
+  if(entropy<40){pct=33;color='#E5484D';label='Faible';}
+  else if(entropy<70){pct=66;color='#F59E0B';label='Moyen';}
+  else{pct=100;color='#10B981';label='Très fort';}
+  m.style.width=pct+'%';m.style.background=color;
+  t.textContent='Sécurité : '+label+' (~'+Math.round(entropy)+' bits)';
+}
+function copyPwd(){
+  const v=document.getElementById('pwd-val').textContent;
+  if(v.startsWith('cliquez'))return;
+  navigator.clipboard.writeText(v).then(()=>{
+    const b=event.target;const o=b.textContent;b.textContent='Copié ✓';setTimeout(()=>b.textContent=o,1200);
+  });
+}
+
+/* ---------- 7. Translator ---------- */
+function trnCheck(){
+  const f=document.getElementById('trn-from'),t=document.getElementById('trn-to');
+  if(f.value===t.value){
+    // si identiques, on bascule la cible vers une autre langue
+    const others=['fr','en','de'].filter(l=>l!==f.value);
+    t.value=others[0];
+  }
+}
+function swapTrn(){
+  const f=document.getElementById('trn-from'),t=document.getElementById('trn-to');
+  [f.value,t.value]=[t.value,f.value];
+  const src=document.getElementById('trn-src'),out=document.getElementById('trn-out');
+  src.value=out.value;out.value='';
+}
+async function translateText(){
+  const text=document.getElementById('trn-src').value.trim();
+  const from=document.getElementById('trn-from').value;
+  const to=document.getElementById('trn-to').value;
+  const out=document.getElementById('trn-out');
+  if(!text){alert('Entrez un texte à traduire.');return;}
+  if(from===to){out.value=text;return;}
+  out.value='Traduction en cours…';
+  try{
+    const url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+from+'|'+to;
+    const r=await fetch(url);
+    const d=await r.json();
+    if(d.responseData&&d.responseData.translatedText){
+      out.value=d.responseData.translatedText;
+    }else{
+      out.value='Désolé, la traduction a échoué. Réessayez.';
+    }
+  }catch(e){
+    out.value='Impossible de traduire. Vérifiez votre connexion internet.';
+  }
+}
+function copyTrn(){
+  const v=document.getElementById('trn-out').value;
+  if(!v)return;
+  navigator.clipboard.writeText(v).then(()=>{
+    const b=event.target;const o=b.textContent;b.textContent='Copié ✓';setTimeout(()=>b.textContent=o,1200);
+  });
+}
+
+/* init */
+fillCur();pctLabels();
+</script>
+</body>
+</html>
