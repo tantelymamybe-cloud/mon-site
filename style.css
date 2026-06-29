@@ -1,390 +1,45 @@
-/* ===== outilsweb-pro.com — Design Amélioré Prêt à l'Emploi ===== */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght=500;600;700&family=Inter:wght=400;500;600&display=swap');
+/* ==========================================================================
+   DES CARTES EN 3D ET FLOTTANTES POUR VOS 7 OPTIONS
+   ========================================================================== */
 
-:root {
-  /* Fond : Un bleu-gris doux, reposant et super moderne pour la vue */
-  --bg: #eef2f7;
-  --surface: #FFFFFF;
-  --ink: #15151F;
-  --muted: #6A6A7C;
-  --line: #E6E6EF;
-  --brand: #4F46E5;
-  --brand-soft: #EEEDFD;
-  --radius: 16px;
-  --shadow: 0 4px 20px rgba(20,20,40,.05), 0 1px 3px rgba(20,20,40,.02);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-/* 1. Amélioration du Fond du Site (Doux, captivant et optimisé pour la vue) */
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-  color: var(--ink);
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-  
-  /* Dégradé fluide aux tons pastel (bleu/violet très léger) pour un effet moderne et apaisant */
-  background: linear-gradient(135deg, #eef2f7 0%, #e4e8ff 50%, #eef2f7 100%);
-  background-size: 200% 200%;
-  animation: smoothBg 15s ease infinite;
-}
-
-/* Animation discrète pour faire vivre le fond sans fatiguer les yeux */
-@keyframes smoothBg {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-h1, h2, h3, .brand {
-  font-family: 'Space Grotesk', sans-serif;
-  letter-spacing: -.02em;
-}
-
-a {
-  color: var(--brand);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-.wrap {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* Header */
-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: rgba(238, 242, 247, 0.85); /* Adapté au nouveau fond */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 64px;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 20px;
-  color: var(--ink);
-}
-
-.brand:hover {
-  text-decoration: none;
-}
-
-.brand .dot {
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-  background: var(--brand);
-  position: relative;
-  flex: none;
-  box-shadow: inset 0 0 0 4px rgba(255,255,255,.25);
-}
-
-.brand .dot::after {
-  content: "";
-  position: absolute;
-  inset: 9px;
-  border-radius: 3px;
-  background: #fff;
-  opacity: .9;
-}
-
-.brand small {
-  color: var(--muted);
-  font-weight: 500;
-  font-family: 'Inter';
-}
-
-.nav-links {
-  display: flex;
-  gap: 6px;
-}
-
-.nav-links a {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--muted);
-  padding: 8px 12px;
-  border-radius: 9px;
-}
-
-.nav-links a:hover {
-  background: var(--surface);
-  color: var(--ink);
-  text-decoration: none;
-}
-
-/* Ad slot */
-.ad {
-  margin: 18px auto;
-  max-width: 760px;
-  border: 1px dashed var(--line);
-  border-radius: 12px;
-  min-height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #B3B3C2;
-  font-size: 12px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  background: repeating-linear-gradient(45deg,#fafafd,#fafafd 10px,#f4f4fa 10px,#f4f4fa 20px);
-}
-
-/* Article */
-main {
-  padding: 36px 0 20px;
-}
-
-.eyebrow {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--brand);
-  background: var(--brand-soft);
-  padding: 6px 12px;
-  border-radius: 100px;
-  margin-bottom: 16px;
-}
-
-article h1 {
-  font-size: clamp(28px, 5vw, 40px);
-  line-height: 1.1;
-  margin-bottom: 10px;
-}
-
-article .lead {
-  font-size: 18px;
-  color: var(--muted);
-  margin-bottom: 26px;
-}
-
-article h2 {
-  font-size: 23px;
-  margin: 34px 0 12px;
-}
-
-article h3 {
-  font-size: 18px;
-  margin: 24px 0 8px;
-}
-
-article p {
-  margin-bottom: 14px;
-}
-
-article ul, article ol {
-  margin: 0 0 16px 22px;
-}
-
-article li {
-  margin-bottom: 7px;
-}
-
-/* Cartes modernisées avec ombres douces */
+/* Style de base des 7 blocs (au repos) */
 article .card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 22px 24px;
-  margin: 22px 0;
-  box-shadow: var(--shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* Léger effet de survol pour les cartes d'options */
-article .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(20,20,40,.08);
-}
-
-article strong {
-  color: var(--ink);
-}
-
-.updated {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 26px;
-}
-
-.toc {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  margin-bottom: 30px;
-}
-
-.toc strong {
-  display: block;
-  font-family: 'Space Grotesk';
-  margin-bottom: 10px;
-}
-
-.toc a {
-  display: block;
-  padding: 4px 0;
-  color: var(--muted);
-}
-
-.toc a:hover {
-  color: var(--brand);
-}
-
-/* 2. Transformation des Boutons en Style 3D Réel pour les options */
-.btn {
-  display: inline-block;
-  font-weight: 600;
-  color: #fff;
-  background: var(--brand);
-  border: none;
-  border-radius: 11px;
-  padding: 12px 24px;
-  cursor: pointer;
-  margin-top: 8px;
+  background: #11131e; /* Garde votre joli fond sombre de carte */
+  border: 1px solid #1e2235; /* Une bordure fine et moderne */
+  border-radius: var(--radius); /* Conserve vos coins arrondis */
+  padding: 22px 24px;[cite: 1]
+  margin: 22px 0;[cite: 1]
   
-  /* L'effet 3D : ombre solide plus sombre en dessous qui crée l'épaisseur */
-  box-shadow: 0 5px 0px #3126a2, 0 8px 15px rgba(79, 70, 229, 0.3);
+  /* Effet 3D initial : On ajoute une ombre solide et une ombre diffuse */
+  box-shadow: 0 6px 0px #08090f, 0 10px 20px rgba(0, 0, 0, 0.4);
+  
   position: relative;
-  transition: all 0.1s ease; /* Effet mécanique rapide */
+  transform: translateY(0);
+  /* Transition fluide pour l'effet flottant (0.3 secondes) */
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
 }
 
-/* Effet au survol (le bouton brille légèrement) */
-.btn:hover {
-  filter: brightness(1.1);
-  text-decoration: none;
-  color: #fff;
+/* 1. L'effet FLOTTANT quand la souris passe sur l'une des 7 options */
+article .card:hover {
+  /* La carte s'élève de 8 pixels vers le haut */
+  transform: translateY(-8px);
+  
+  /* L'effet 3D s'accentue : l'épaisseur grandit et l'ombre devient lumineuse (style néon bleu très discret) */
+  box-shadow: 0 14px 0px #08090f, 0 20px 30px rgba(79, 70, 229, 0.15);
+  border-color: var(--brand); /* La bordure s'allume légèrement avec votre couleur violette/bleue */[cite: 1]
 }
 
-/* Effet au clic (Le bouton s'enfonce physiquement en 3D !) */
-.btn:active {
-  /* On réduit l'épaisseur de l'ombre du dessous pour simuler l'enfoncement */
-  box-shadow: 0 2px 0px #3126a2, 0 4px 6px rgba(79, 70, 229, 0.3);
-  /* On déplace le bouton vers le bas de la même valeur */
-  transform: translateY(3px);
+/* 2. L'effet ENFONCEMENT 3D quand on clique sur l'outil */
+article .card:active {
+  /* La carte s'enfonce physiquement */
+  transform: translateY(4px);
+  
+  /* L'ombre 3D s'écrase pour simuler la pression */
+  box-shadow: 0 2px 0px #08090f, 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-/* Contact form */
-.field {
-  margin-bottom: 16px;
-}
-
-label {
-  display: block;
-  font-size: 13.5px;
-  font-weight: 600;
-  margin-bottom: 7px;
-  color: var(--ink);
-}
-
-input, textarea {
-  width: 100%;
-  font-family: inherit;
-  font-size: 15px;
-  padding: 11px 13px;
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  background: #fbfbfe;
-}
-
-input:focus, textarea:focus {
-  outline: none;
-  border-color: var(--brand);
-  background: #fff;
-  box-shadow: 0 0 0 3px var(--brand-soft);
-}
-
-textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-/* Footer */
-footer {
-  margin-top: 50px;
-  border-top: 1px solid var(--line);
-  background: var(--surface);
-}
-
-.foot {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 34px 20px;
-  max-width: 980px;
-  margin: 0 auto;
-}
-
-.foot p {
-  color: var(--muted);
-  font-size: 13.5px;
-  max-width: 320px;
-}
-
-.foot-links {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: 13.5px;
-}
-
-.foot-links strong {
-  color: var(--ink);
-  font-size: 13.5px;
-}
-
-.foot-links a {
-  color: var(--muted);
-}
-
-.foot-links a:hover {
-  color: var(--ink);
-}
-
-.copyright {
-  text-align: center;
-  padding: 16px;
-  color: #B3B3C2;
-  font-size: 12.5px;
-  border-top: 1px solid var(--line);
-}
-
-@media(max-width:600px) {
-  .nav-links { display: none; }
-}
-
-@media(prefers-reduced-motion:reduce) {
-  * { scroll-behavior: auto; }
+/* Optionnel : On fait bouger la petite flèche "Ouvrir ->" au survol pour donner de la vie */
+article .card:hover a {
+  text-decoration: none;[cite: 1]
 }
