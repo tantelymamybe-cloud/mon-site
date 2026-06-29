@@ -1,45 +1,43 @@
-/* ==========================================================================
-   DES CARTES EN 3D ET FLOTTANTES POUR VOS 7 OPTIONS
-   ========================================================================== */
+/* On ajoute un halo de lumière coloré derrière chaque option au survol */
 
-/* Style de base des 7 blocs (au repos) */
-article .card {
-  background: #11131e; /* Garde votre joli fond sombre de carte */
-  border: 1px solid #1e2235; /* Une bordure fine et moderne */
-  border-radius: var(--radius); /* Conserve vos coins arrondis */
-  padding: 22px 24px;[cite: 1]
-  margin: 22px 0;[cite: 1]
-  
-  /* Effet 3D initial : On ajoute une ombre solide et une ombre diffuse */
-  box-shadow: 0 6px 0px #08090f, 0 10px 20px rgba(0, 0, 0, 0.4);
-  
-  position: relative;
-  transform: translateY(0);
-  /* Transition fluide pour l'effet flottant (0.3 secondes) */
-  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  cursor: pointer;
+/* 1ère carte (Convertisseur PDF - Icône Rouge) */
+article .card:nth-of-type(1):hover {
+  border-color: #FF3366;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(255, 51, 102, 0.25);
 }
 
-/* 1. L'effet FLOTTANT quand la souris passe sur l'une des 7 options */
-article .card:hover {
-  /* La carte s'élève de 8 pixels vers le haut */
-  transform: translateY(-8px);
-  
-  /* L'effet 3D s'accentue : l'épaisseur grandit et l'ombre devient lumineuse (style néon bleu très discret) */
-  box-shadow: 0 14px 0px #08090f, 0 20px 30px rgba(79, 70, 229, 0.15);
-  border-color: var(--brand); /* La bordure s'allume légèrement avec votre couleur violette/bleue */[cite: 1]
+/* 2ème carte (Compresseur d'images - Icône Bleue) */
+article .card:nth-of-type(2):hover {
+  border-color: #38BDF8;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(56, 189, 248, 0.25);
 }
 
-/* 2. L'effet ENFONCEMENT 3D quand on clique sur l'outil */
-article .card:active {
-  /* La carte s'enfonce physiquement */
-  transform: translateY(4px);
-  
-  /* L'ombre 3D s'écrase pour simuler la pression */
-  box-shadow: 0 2px 0px #08090f, 0 4px 10px rgba(0, 0, 0, 0.5);
+/* 3ème carte (Générateur QR Code - Icône Violette) */
+article .card:nth-of-type(3):hover {
+  border-color: #A855F7;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(168, 85, 247, 0.25);
 }
 
-/* Optionnel : On fait bouger la petite flèche "Ouvrir ->" au survol pour donner de la vie */
-article .card:hover a {
-  text-decoration: none;[cite: 1]
+/* 4ème carte (Calcul de pourcentage - Icône Jaune) */
+article .card:nth-of-type(4):hover {
+  border-color: #FBBF24;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(251, 191, 36, 0.25);
+}
+
+/* 5ème carte (Convertisseur de devises - Icône Verte) */
+article .card:nth-of-type(5):hover {
+  border-color: #34D399;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(52, 211, 153, 0.25);
+}
+
+/* 6ème carte (Générateur de mots de passe - Icône Rose) */
+article .card:nth-of-type(6):hover {
+  border-color: #F472B6;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(244, 114, 182, 0.25);
+}
+
+/* 7ème carte (Traducteur - Icône Turquoise) */
+article .card:nth-of-type(7):hover {
+  border-color: #2DD4BF;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(45, 212, 191, 0.25);
 }
