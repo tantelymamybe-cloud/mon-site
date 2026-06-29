@@ -80,7 +80,7 @@
       <a href="contact.html">Contact</a>
     </div>
   </div>
-  <div class="copyright">© 2026 mesoutils.com — Tous droits réservés.</div>
+  <div class="copyright">© 2026 outilsweb-pro.com — Tous droits réservés.</div>
 </footer>
 
 <script>
@@ -109,6 +109,7 @@ function sendContact(){
       subject: 'Message de ' + (name || 'un visiteur') + ' — outilsweb-pro.com',
       name: name || 'Visiteur anonyme',
       email: email || 'non renseigné',
+      replyto: email || undefined,
       message: msg
     })
   })
