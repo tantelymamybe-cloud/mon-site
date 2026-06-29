@@ -27,9 +27,12 @@
   if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';}
 </script>
 
-<!-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5107051705652650"
-     crossorigin="anonymous"></script>-
+<!--
+  ============================================================
+  EMPLACEMENT GOOGLE ADSENSE — décommentez et remplacez par votre code
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXX" crossorigin="anonymous"></script>
+  ============================================================
+-->
 
 <style>
   :root{
@@ -52,7 +55,7 @@
     --c-pwd:#F472B6;
     --c-trn:#2DD4BF;
     --radius:16px;
-    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.45);
+    --shadow:0 10px 30px rgba(0,0,0,.5); /* Ombre plus prononcée pour l'effet flottant */
   }
   html[data-theme="light"]{
     --bg:#F5F5FA;
@@ -65,33 +68,47 @@
     --brand-soft:#EEEDFD;
     --turquoise:#0E9488;
     --turquoise-soft:#E3FBF8;
-    --shadow:0 1px 2px rgba(20,20,40,.06), 0 8px 24px rgba(20,20,40,.08);
+    --shadow:0 15px 35px rgba(20,20,40,.1); /* Ombre douce pour le mode clair */
   }
   html[data-theme="light"] .ad{
     color:#9A9AB0;
     background:repeating-linear-gradient(45deg,#fafafd,#fafafd 10px,#f4f4fa 10px,#f4f4fa 20px);
   }
   html[data-theme="light"] .copyright{color:#9A9AB0}
+  
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
+  
   body{
     font-family:'Inter',system-ui,sans-serif;
-    background:var(--bg);
+    background-color: var(--bg);
+    /* Nouveau fond avec halos lumineux dynamiques */
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(91, 95, 239, 0.08), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(45, 212, 191, 0.08), transparent 25%);
+    background-attachment: fixed;
     color:var(--ink);
     line-height:1.55;
     -webkit-font-smoothing:antialiased;
+    transition: background-color 0.3s ease;
   }
+
   h1,h2,h3,.brand{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em}
   a{color:inherit}
-  .wrap{max-width:980px;margin:0 auto;padding:0 20px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px} /* Légèrement élargi pour le slider */
 
   /* Header */
   header{
     position:sticky;top:0;z-index:50;
-    background:rgba(10,14,23,.85);
-    backdrop-filter:blur(10px);
+    background:rgba(10,14,23,.75);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
     border-bottom:1px solid var(--line);
   }
+  html[data-theme="light"] header {
+    background:rgba(255,255,255,.8);
+  }
+
   .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
   .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;cursor:pointer}
   .brand .dot{
@@ -104,7 +121,7 @@
   .nav-links{display:flex;gap:6px}
   .nav-links a{
     font-size:14px;font-weight:500;color:var(--muted);
-    padding:8px 12px;border-radius:9px;text-decoration:none;transition:.15s;
+    padding:8px 12px;border-radius:9px;text-decoration:none;transition:.15s;cursor:pointer;
   }
   .nav-links a:hover{background:var(--surface);color:var(--ink)}
 
@@ -118,35 +135,97 @@
   }
 
   /* Hero */
-  .hero{padding:48px 0 8px;text-align:center}
+  .hero{padding:60px 0 20px;text-align:center}
   .hero .eyebrow{
     display:inline-block;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--brand);background:var(--brand-soft);padding:6px 12px;border-radius:100px;margin-bottom:18px;
+    color:var(--brand);background:var(--brand-soft);padding:6px 16px;border-radius:100px;margin-bottom:20px;
+    box-shadow: 0 4px 15px rgba(91, 95, 239, 0.2);
   }
-  .hero h1{font-size:clamp(30px,6vw,46px);line-height:1.05;font-weight:700}
-  .hero p{max-width:540px;margin:14px auto 0;color:var(--muted);font-size:17px}
+  .hero h1{font-size:clamp(32px,6vw,52px);line-height:1.1;font-weight:700;}
+  .hero p{max-width:600px;margin:18px auto 0;color:var(--muted);font-size:18px}
 
-  /* Toolbox grid */
+  /* ==================================================
+     NOUVEAU DESIGN : Grille flottante et glissante
+     ================================================== */
+  
+  /* Animation flottante infinie */
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0px); }
+  }
+
   .grid{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
-    padding:34px 0 10px;
+    display:flex;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    gap:24px;
+    padding:40px 10px 60px 10px; /* Espace pour laisser l'ombre visible en bas */
+    -webkit-overflow-scrolling:touch;
+    /* Masquer la scrollbar pour un look épuré */
+    scrollbar-width:none; 
+    -ms-overflow-style:none;
   }
+  .grid::-webkit-scrollbar {
+    display:none; 
+  }
+
   .tool-card{
-    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-    padding:22px;text-align:left;cursor:pointer;transition:.18s ease;
-    display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;
+    flex: 0 0 300px; /* Taille fixe pour chaque carte dans le slider */
+    scroll-snap-align: center; /* Permet un alignement parfait sur mobile */
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px 24px;
+    text-align:left;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    position:relative;
+    overflow:hidden;
+    
+    /* Application de l'animation flottante */
+    animation: float 4s ease-in-out infinite;
+    box-shadow: var(--shadow);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
-  .tool-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:transparent}
+
+  /* Désynchroniser légèrement les cartes pour un effet plus naturel */
+  .tool-card:nth-child(2n) { animation-delay: -1s; }
+  .tool-card:nth-child(3n) { animation-delay: -2s; }
+  .tool-card:nth-child(4n) { animation-delay: -3s; }
+
+  /* Effet au survol (arrête la lévitation et agrandit légèrement) */
+  .tool-card:hover{
+    animation-play-state: paused;
+    transform:scale(1.03) translateY(-5px);
+    border-color:var(--accent);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  }
+  html[data-theme="light"] .tool-card:hover {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+
   .tool-card .chip{
-    width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+    width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;
     color:#fff;flex:none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   }
-  .tool-card .chip svg{width:24px;height:24px}
-  .tool-card h3{font-size:17px;font-weight:600;color:#8BC53F}
-  .tool-card p{font-size:14.5px;color:var(--muted);margin-top:-6px}
-  .tool-card .go{font-size:14px;font-weight:600;margin-top:auto;display:flex;align-items:center;gap:6px;color:#8BC53F;opacity:.85}
-  .tool-card:hover .go{opacity:1}
-  .tool-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent);opacity:0;transition:.18s}
+  .tool-card .chip svg{width:26px;height:26px}
+  .tool-card h3{font-size:19px;font-weight:700;color:var(--ink)}
+  .tool-card p{font-size:15px;color:var(--muted);margin-top:-6px; line-height: 1.6;}
+  .tool-card .go{
+    font-size:15px;font-weight:600;margin-top:auto;display:flex;align-items:center;gap:6px;
+    color:var(--accent); opacity:0.8; transition:0.2s;
+  }
+  .tool-card:hover .go{opacity:1; gap:10px;} /* La flèche s'écarte un peu au survol */
+  
+  .tool-card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+    background:var(--accent);opacity:0;transition:.3s;
+  }
   .tool-card:hover::before{opacity:1}
 
   /* Tool panel (vue détail) */
@@ -155,15 +234,15 @@
   @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   .back{
     display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:500;color:var(--muted);
-    background:none;border:none;cursor:pointer;padding:8px 0;margin-bottom:6px;
+    background:none;border:none;cursor:pointer;padding:8px 0;margin-bottom:12px;
   }
   .back:hover{color:var(--ink)}
   .panel-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
   .panel-head .chip{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff}
   .panel-head .chip svg{width:22px;height:22px}
   .panel-head h2{font-size:24px}
-  .panel-sub{color:var(--muted);margin-bottom:22px}
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+  .panel-sub{color:var(--muted);margin-bottom:22px; font-size:16px;}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px; box-shadow:var(--shadow);}
 
   /* Form bits */
   label{display:block;font-size:14.5px;font-weight:600;margin:0 0 7px}
@@ -179,14 +258,14 @@
     font-family:inherit;font-size:15px;font-weight:600;color:#fff;background:var(--brand);
     border:none;border-radius:11px;padding:12px 20px;cursor:pointer;transition:.15s;
   }
-  .btn:hover{filter:brightness(1.08)}
+  .btn:hover{filter:brightness(1.08); transform:translateY(-2px); box-shadow:0 4px 12px rgba(91,95,239,0.3);}
   .btn:active{transform:translateY(1px)}
   .btn.ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
-  .btn.ghost:hover{background:var(--line)}
+  .btn.ghost:hover{background:var(--line); box-shadow:none;}
   .btn-row{display:flex;gap:10px;flex-wrap:wrap}
   .result{
     margin-top:18px;padding:16px;border-radius:12px;background:var(--brand-soft);
-    font-size:15px;color:var(--ink);display:none;
+    font-size:15px;color:var(--ink);display:none; border:1px solid var(--brand);
   }
   .result.show{display:block}
   .result b{font-family:'Space Grotesk';font-size:22px}
@@ -195,11 +274,13 @@
   /* Password specific */
   .pwd-out{
     display:flex;gap:10px;align-items:center;background:var(--brand-soft);color:var(--ink);border-radius:12px;
-    padding:14px 16px;font-family:'Space Grotesk';font-size:18px;word-break:break-all;border:1px solid var(--line);
+    padding:14px 16px;font-family:'Space Grotesk';font-size:18px;word-break:break-all;border:1px solid var(--brand);
   }
   .pwd-out span{flex:1}
   .copy{background:rgba(255,255,255,.08);border:none;color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:14px;font-family:inherit;flex:none}
   .copy:hover{background:rgba(255,255,255,.16)}
+  html[data-theme="light"] .copy{background:rgba(0,0,0,.05)}
+  html[data-theme="light"] .copy:hover{background:rgba(0,0,0,.1)}
   input[type=range]{width:100%;accent-color:var(--brand)}
   .checks{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}
   .checks label{display:flex;align-items:center;gap:8px;font-weight:500;font-size:14px;margin:0;cursor:pointer}
@@ -209,10 +290,10 @@
 
   /* drop zone */
   .drop{
-    border:2px dashed var(--line);border-radius:14px;padding:34px;text-align:center;
-    color:var(--muted);cursor:pointer;transition:.15s;background:var(--surface-2);
+    border:2px dashed var(--line);border-radius:14px;padding:40px;text-align:center;
+    color:var(--muted);cursor:pointer;transition:.2s;background:var(--surface-2);
   }
-  .drop:hover,.drop.over{border-color:var(--turquoise);background:var(--turquoise-soft);color:var(--turquoise)}
+  .drop:hover,.drop.over{border-color:var(--turquoise);background:var(--turquoise-soft);color:var(--turquoise); transform:scale(1.01);}
   .drop strong{color:var(--ink)}
   .preview{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
   .preview img{width:74px;height:74px;object-fit:cover;border-radius:9px;border:1px solid var(--line)}
@@ -221,19 +302,25 @@
 
   /* Footer */
   footer{margin-top:50px;border-top:1px solid var(--line);background:var(--surface)}
-  .foot{display:flex;justify-content:center;flex-wrap:wrap;gap:60px;padding:34px 0;text-align:left}
+  .foot{display:flex;justify-content:center;flex-wrap:wrap;gap:60px;padding:40px 0;text-align:left}
   .foot p{color:var(--muted);font-size:15px;max-width:320px}
-  .foot-links{display:flex;flex-direction:column;gap:8px;font-size:14.5px}
-  .foot-links a{color:var(--muted);text-decoration:none}
+  .foot-links{display:flex;flex-direction:column;gap:10px;font-size:14.5px}
+  .foot-links a{color:var(--muted);text-decoration:none;cursor:pointer;}
   .foot-links a:hover{color:var(--ink)}
   .copyright{text-align:center;padding:16px;color:#8C97B3;font-size:13.5px;border-top:1px solid var(--line)}
 
   @media(max-width:720px){
-    .grid{grid-template-columns:1fr 1fr;gap:12px}
     .row{grid-template-columns:1fr}
     .nav-links{display:none}
+    .hero h1{font-size:32px;}
+    .grid{
+        /* Pour bien centrer la première carte sur mobile */
+        padding: 20px 20px 50px 20px; 
+    }
+    .tool-card {
+        flex: 0 0 280px;
+    }
   }
-  @media(max-width:460px){.grid{grid-template-columns:1fr}}
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -268,58 +355,59 @@
     <div class="hero">
       <span class="eyebrow">100% gratuit · sans inscription</span>
       <h1>Tous vos outils du quotidien,<br>au même endroit.</h1>
-      <p>Sept outils rapides qui fonctionnent directement dans votre navigateur. Télécharger en automatique et vos fichiers ne quittent jamais votre appareil.</p>
+      <p>Six outils rapides qui fonctionnent directement dans votre navigateur. Vos fichiers ne quittent jamais votre appareil.</p>
     </div>
 
+    <!-- NOUVELLE GRILLE : Flottante et glissante -->
     <div class="grid">
-      <button class="tool-card" style="--accent:var(--c-pdf)" onclick="openTool('pdf')">
+      <div class="tool-card" style="--accent:var(--c-pdf)" onclick="openTool('pdf')">
         <span class="chip" style="background:var(--c-pdf)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></span>
         <h3>Convertisseur PDF</h3>
         <p>Images, Word, Excel vers PDF — et PDF vers Word/Excel.</p>
-        <span class="go">Ouvrir →</span>
-      </button>
+        <span class="go">Ouvrir &rarr;</span>
+      </div>
 
-      <button class="tool-card" style="--accent:var(--c-img)" onclick="openTool('img')">
+      <div class="tool-card" style="--accent:var(--c-img)" onclick="openTool('img')">
         <span class="chip" style="background:var(--c-img)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L5 21"/></svg></span>
         <h3>Compresseur d'images</h3>
         <p>Réduisez le poids de vos photos sans perdre la qualité.</p>
-        <span class="go">Ouvrir →</span>
-      </button>
+        <span class="go">Ouvrir &rarr;</span>
+      </div>
 
-      <button class="tool-card" style="--accent:var(--c-qr)" onclick="openTool('qr')">
+      <div class="tool-card" style="--accent:var(--c-qr)" onclick="openTool('qr')">
         <span class="chip" style="background:var(--c-qr)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M21 14v.01M14 21h.01M17 21h4v-4"/></svg></span>
         <h3>Générateur QR Code</h3>
         <p>Créez un QR code pour un lien, un texte ou un wifi.</p>
-        <span class="go">Ouvrir →</span>
-      </button>
+        <span class="go">Ouvrir &rarr;</span>
+      </div>
 
-      <button class="tool-card" style="--accent:var(--c-pct)" onclick="openTool('pct')">
+      <div class="tool-card" style="--accent:var(--c-pct)" onclick="openTool('pct')">
         <span class="chip" style="background:var(--c-pct)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span>
         <h3>Calcul de pourcentage</h3>
         <p>Pourcentage, remise, augmentation, TVA… en un clic.</p>
-        <span class="go">Ouvrir →</span>
-      </button>
+        <span class="go">Ouvrir &rarr;</span>
+      </div>
 
-      <button class="tool-card" style="--accent:var(--c-cur)" onclick="openTool('cur')">
+      <div class="tool-card" style="--accent:var(--c-cur)" onclick="openTool('cur')">
         <span class="chip" style="background:var(--c-cur)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v2M12 16v2"/></svg></span>
         <h3>Convertisseur de devises</h3>
         <p>Taux de change en temps réel entre 30+ monnaies.</p>
-        <span class="go">Ouvrir →</span>
-      </button>
+        <span class="go">Ouvrir &rarr;</span>
+      </div>
 
-      <button class="tool-card" style="--accent:var(--c-pwd)" onclick="openTool('pwd')">
+      <div class="tool-card" style="--accent:var(--c-pwd)" onclick="openTool('pwd')">
         <span class="chip" style="background:var(--c-pwd)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-        <h3>Générateur de mots de passe</h3>
+        <h3>Générateur de mot de passe</h3>
         <p>Créez des mots de passe forts et sécurisés.</p>
-        <span class="go">Ouvrir →</span>
-      </button>
+        <span class="go">Ouvrir &rarr;</span>
+      </div>
 
-      <button class="tool-card" style="--accent:var(--c-trn)" onclick="openTool('trn')">
+      <div class="tool-card" style="--accent:var(--c-trn)" onclick="openTool('trn')">
         <span class="chip" style="background:var(--c-trn)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg></span>
         <h3>Traducteur</h3>
         <p>Traduisez entre plus de 25 langues.</p>
-        <span class="go">Ouvrir →</span>
-      </button>
+        <span class="go">Ouvrir &rarr;</span>
+      </div>
     </div>
   </section>
 
@@ -421,7 +509,7 @@
   <!-- ===== QR ===== -->
   <section class="panel" id="panel-qr">
     <button class="back" onclick="showHome()">← Retour aux outils</button>
-    <div class="panel-head"><span class="chip" style="background:var(--c-qr)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span><h2>Générateur de QR Code</h2></div>
+    <div class="panel-head"><span class="chip" style="background:var(--c-qr)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M21 14v.01M14 21h.01M17 21h4v-4"/></svg></span><h2>Générateur de QR Code</h2></div>
     <p class="panel-sub">Entrez un lien ou un texte, votre QR code est créé instantanément.</p>
     <div class="card">
       <div class="field">
@@ -472,7 +560,7 @@
   <!-- ===== CURRENCY ===== -->
   <section class="panel" id="panel-cur">
     <button class="back" onclick="showHome()">← Retour aux outils</button>
-    <div class="panel-head"><span class="chip" style="background:var(--c-cur)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/></svg></span><h2>Convertisseur de devises</h2></div>
+    <div class="panel-head"><span class="chip" style="background:var(--c-cur)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8M12 6v2M12 16v2"/></svg></span><h2>Convertisseur de devises</h2></div>
     <p class="panel-sub">Taux de change actualisés (source : Frankfurter / BCE).</p>
     <div class="card">
       <div class="field"><label>Montant</label><input type="number" id="cur-amount" value="100"></div>
