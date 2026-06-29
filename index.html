@@ -2,6 +2,9 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<script>
+  (function(){try{var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>outilsweb-pro — Vos outils en ligne gratuits</title>
 <meta name="description" content="outilsweb-pro.com : convertisseur PDF, compresseur d'images, générateur de QR code, calculateur de pourcentage, convertisseur de devises et générateur de mots de passe. 100% gratuit et directement dans votre navigateur.">
@@ -14,6 +17,15 @@
 <!-- Librairies (PDF + QR) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- Librairies (conversion de documents : DOCX/XLSX <-> PDF) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.11.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+<script>
+  if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';}
+</script>
 
 <!--
   ============================================================
@@ -45,6 +57,24 @@
     --radius:16px;
     --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.45);
   }
+  html[data-theme="light"]{
+    --bg:#F5F5FA;
+    --surface:#FFFFFF;
+    --surface-2:#F2F3F8;
+    --ink:#15151F;
+    --muted:#5B5B6E;
+    --line:#E6E6EF;
+    --brand:#4F46E5;
+    --brand-soft:#EEEDFD;
+    --turquoise:#0E9488;
+    --turquoise-soft:#E3FBF8;
+    --shadow:0 1px 2px rgba(20,20,40,.06), 0 8px 24px rgba(20,20,40,.08);
+  }
+  html[data-theme="light"] .ad{
+    color:#9A9AB0;
+    background:repeating-linear-gradient(45deg,#fafafd,#fafafd 10px,#f4f4fa 10px,#f4f4fa 20px);
+  }
+  html[data-theme="light"] .copyright{color:#9A9AB0}
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
@@ -227,6 +257,7 @@
       <a onclick="openTool('pwd')">Mot de passe</a>
       <a onclick="openTool('trn')">Traduction</a>
     </nav>
+    <button id="theme-toggle" onclick="toggleTheme()" aria-label="Changer de thème" style="background:var(--surface-2);border:1px solid var(--line);border-radius:10px;width:38px;height:38px;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;flex:none;margin-left:8px">🌙</button>
   </div>
 </header>
 
@@ -247,7 +278,7 @@
       <button class="tool-card" style="--accent:var(--c-pdf)" onclick="openTool('pdf')">
         <span class="chip" style="background:var(--c-pdf)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></span>
         <h3>Convertisseur PDF</h3>
-        <p>Transformez vos images (JPG, PNG) en un fichier PDF.</p>
+        <p>Images, Word, Excel vers PDF — et PDF vers Word/Excel.</p>
         <span class="go">Ouvrir →</span>
       </button>
 
@@ -289,26 +320,84 @@
       <button class="tool-card" style="--accent:var(--c-trn)" onclick="openTool('trn')">
         <span class="chip" style="background:var(--c-trn)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg></span>
         <h3>Traducteur</h3>
-        <p>Traduisez entre français, anglais et allemand.</p>
+        <p>Traduisez entre plus de 25 langues.</p>
         <span class="go">Ouvrir →</span>
       </button>
     </div>
   </section>
 
-  <!-- ===== PDF ===== -->
+  <!-- ===== PDF / CONVERTISSEUR DE DOCUMENTS ===== -->
   <section class="panel" id="panel-pdf">
     <button class="back" onclick="showHome()">← Retour aux outils</button>
-    <div class="panel-head"><span class="chip" style="background:var(--c-pdf)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><h2>Images en PDF</h2></div>
-    <p class="panel-sub">Sélectionnez une ou plusieurs images, elles seront regroupées dans un seul PDF.</p>
+    <div class="panel-head"><span class="chip" style="background:var(--c-pdf)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><h2>Convertisseur de documents</h2></div>
+    <p class="panel-sub">Images, Word et Excel vers PDF — et PDF vers Word ou Excel.</p>
     <div class="card">
-      <div class="drop" id="pdf-drop">Cliquez ou glissez vos images ici<br><strong>JPG, PNG, WebP</strong></div>
-      <input type="file" id="pdf-input" accept="image/*" multiple hidden>
-      <div class="preview" id="pdf-preview"></div>
-      <div class="btn-row" style="margin-top:18px">
-        <button class="btn" onclick="makePdf()">Générer le PDF</button>
-        <button class="btn ghost" onclick="clearPdf()">Effacer</button>
+      <div class="field">
+        <label>Type de conversion</label>
+        <select id="pdf-mode" onchange="pdfModeChange()">
+          <option value="img2pdf" selected>Images → PDF</option>
+          <option value="docx2pdf">Word (DOCX) → PDF</option>
+          <option value="xls2pdf">Excel (XLSX/XLS) → PDF</option>
+          <option value="pdf2docx">PDF → Word (.doc)</option>
+          <option value="pdf2xls">PDF → Excel (.xlsx)</option>
+        </select>
       </div>
-      <p class="hint">Vos images sont traitées sur votre appareil et ne sont jamais envoyées sur internet.</p>
+
+      <!-- Images -> PDF -->
+      <div class="pdf-sub" id="pdf-sub-img2pdf">
+        <div class="drop" id="pdf-drop">Cliquez ou glissez vos images ici<br><strong>JPG, PNG, WebP</strong></div>
+        <input type="file" id="pdf-input" accept="image/*" multiple hidden>
+        <div class="preview" id="pdf-preview"></div>
+        <div class="btn-row" style="margin-top:18px">
+          <button class="btn" onclick="makePdf()">Générer le PDF</button>
+          <button class="btn ghost" onclick="clearPdf()">Effacer</button>
+        </div>
+        <p class="hint">Vos images sont traitées sur votre appareil et ne sont jamais envoyées sur internet.</p>
+      </div>
+
+      <!-- DOCX -> PDF -->
+      <div class="pdf-sub" id="pdf-sub-docx2pdf" style="display:none">
+        <div class="drop" id="docx2pdf-drop">Cliquez ou glissez votre fichier ici<br><strong>DOCX</strong></div>
+        <input type="file" id="docx2pdf-input" accept=".docx" hidden>
+        <p class="hint" id="docx2pdf-filename">Aucun fichier sélectionné.</p>
+        <div class="btn-row" style="margin-top:10px">
+          <button class="btn" onclick="convertDocxToPdf()">Convertir en PDF</button>
+        </div>
+        <p class="hint">La mise en page très complexe (colonnes, images flottantes) peut être simplifiée à la conversion.</p>
+      </div>
+
+      <!-- XLSX/XLS -> PDF -->
+      <div class="pdf-sub" id="pdf-sub-xls2pdf" style="display:none">
+        <div class="drop" id="xls2pdf-drop">Cliquez ou glissez votre fichier ici<br><strong>XLSX, XLS</strong></div>
+        <input type="file" id="xls2pdf-input" accept=".xlsx,.xls,.csv" hidden>
+        <p class="hint" id="xls2pdf-filename">Aucun fichier sélectionné.</p>
+        <div class="btn-row" style="margin-top:10px">
+          <button class="btn" onclick="convertXlsToPdf()">Convertir en PDF</button>
+        </div>
+        <p class="hint">Toutes les feuilles du classeur sont incluses, une à la suite de l'autre.</p>
+      </div>
+
+      <!-- PDF -> DOCX -->
+      <div class="pdf-sub" id="pdf-sub-pdf2docx" style="display:none">
+        <div class="drop" id="pdf2docx-drop">Cliquez ou glissez votre fichier ici<br><strong>PDF</strong></div>
+        <input type="file" id="pdf2docx-input" accept=".pdf" hidden>
+        <p class="hint" id="pdf2docx-filename">Aucun fichier sélectionné.</p>
+        <div class="btn-row" style="margin-top:10px">
+          <button class="btn" onclick="convertPdfToDocx()">Extraire vers Word</button>
+        </div>
+        <p class="hint">Seul le texte est extrait et reformaté en paragraphes ; mise en page, images et tableaux ne sont pas conservés.</p>
+      </div>
+
+      <!-- PDF -> XLS -->
+      <div class="pdf-sub" id="pdf-sub-pdf2xls" style="display:none">
+        <div class="drop" id="pdf2xls-drop">Cliquez ou glissez votre fichier ici<br><strong>PDF</strong></div>
+        <input type="file" id="pdf2xls-input" accept=".pdf" hidden>
+        <p class="hint" id="pdf2xls-filename">Aucun fichier sélectionné.</p>
+        <div class="btn-row" style="margin-top:10px">
+          <button class="btn" onclick="convertPdfToXls()">Extraire vers Excel</button>
+        </div>
+        <p class="hint">Le texte est extrait ligne par ligne et réparti en colonnes au mieux ; les tableaux complexes peuvent nécessiter une retouche manuelle.</p>
+      </div>
     </div>
   </section>
 
@@ -429,24 +518,16 @@
   <section class="panel" id="panel-trn">
     <button class="back" onclick="showHome()">← Retour aux outils</button>
     <div class="panel-head"><span class="chip" style="background:var(--c-trn)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg></span><h2>Traducteur</h2></div>
-    <p class="panel-sub">Traduisez instantanément entre le français, l'anglais et l'allemand.</p>
+    <p class="panel-sub">Traduisez instantanément entre plus de 25 langues.</p>
     <div class="card">
       <div class="row">
         <div class="field">
           <label>De</label>
-          <select id="trn-from" onchange="trnCheck()">
-            <option value="fr">Français</option>
-            <option value="en" selected>Anglais</option>
-            <option value="de">Allemand</option>
-          </select>
+          <select id="trn-from" onchange="trnCheck()"></select>
         </div>
         <div class="field">
           <label>Vers</label>
-          <select id="trn-to" onchange="trnCheck()">
-            <option value="fr" selected>Français</option>
-            <option value="en">Anglais</option>
-            <option value="de">Allemand</option>
-          </select>
+          <select id="trn-to" onchange="trnCheck()"></select>
         </div>
       </div>
       <div class="field">
@@ -549,6 +630,156 @@ function makePdf(){
     reader.readAsDataURL(pdfFiles[i]);
   };
   next();
+}
+
+/* ---------- 1b. Sélecteur de mode + conversions de documents ---------- */
+function pdfModeChange(){
+  const mode=document.getElementById('pdf-mode').value;
+  document.querySelectorAll('.pdf-sub').forEach(d=>d.style.display='none');
+  document.getElementById('pdf-sub-'+mode).style.display='block';
+}
+function wireFileDrop(dropEl,inputEl,onFile){
+  dropEl.onclick=()=>inputEl.click();
+  inputEl.onchange=e=>{if(e.target.files[0])onFile(e.target.files[0]);};
+  ['dragover','dragleave','drop'].forEach(ev=>dropEl.addEventListener(ev,e=>{
+    e.preventDefault();dropEl.classList.toggle('over',ev==='dragover');
+    if(ev==='drop'&&e.dataTransfer.files[0])onFile(e.dataTransfer.files[0]);
+  }));
+}
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function baseName(name){return (name||'document').replace(/\.[^.]+$/,'');}
+
+/* DOCX -> PDF */
+let docxFile=null;
+wireFileDrop(document.getElementById('docx2pdf-drop'),document.getElementById('docx2pdf-input'),f=>{
+  docxFile=f;document.getElementById('docx2pdf-filename').textContent='Fichier sélectionné : '+f.name;
+});
+async function convertDocxToPdf(){
+  if(!docxFile){alert('Sélectionnez un fichier DOCX.');return;}
+  const btn=event.target,orig=btn.textContent;btn.textContent='Conversion en cours…';btn.disabled=true;
+  try{
+    const arrayBuffer=await docxFile.arrayBuffer();
+    const result=await mammoth.convertToHtml({arrayBuffer});
+    const container=document.createElement('div');
+    container.style.cssText='width:680px;padding:30px;background:#fff;color:#111;font-family:Georgia,serif;font-size:13px;line-height:1.5;position:fixed;left:-9999px;top:0;';
+    container.innerHTML=result.value;
+    document.body.appendChild(container);
+    const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'a4'});
+    doc.html(container,{
+      margin:[40,40,40,40],autoPaging:'text',html2canvas:{scale:0.72},
+      callback:function(doc){
+        doc.save(baseName(docxFile.name)+'.pdf');
+        document.body.removeChild(container);
+        btn.textContent=orig;btn.disabled=false;
+      }
+    });
+  }catch(e){
+    alert('Erreur lors de la conversion : '+e.message);
+    btn.textContent=orig;btn.disabled=false;
+  }
+}
+
+/* XLSX/XLS -> PDF */
+let xlsFile=null;
+wireFileDrop(document.getElementById('xls2pdf-drop'),document.getElementById('xls2pdf-input'),f=>{
+  xlsFile=f;document.getElementById('xls2pdf-filename').textContent='Fichier sélectionné : '+f.name;
+});
+async function convertXlsToPdf(){
+  if(!xlsFile){alert('Sélectionnez un fichier Excel.');return;}
+  const btn=event.target,orig=btn.textContent;btn.textContent='Conversion en cours…';btn.disabled=true;
+  try{
+    const data=await xlsFile.arrayBuffer();
+    const wb=XLSX.read(data,{type:'array'});
+    const container=document.createElement('div');
+    container.style.cssText='width:760px;padding:24px;background:#fff;color:#111;font-family:Arial,sans-serif;position:fixed;left:-9999px;top:0;';
+    wb.SheetNames.forEach(name=>{
+      const html=XLSX.utils.sheet_to_html(wb.Sheets[name]);
+      const wrap=document.createElement('div');
+      wrap.innerHTML='<h3 style="font-family:Arial;font-size:14px;margin:16px 0 8px">'+escapeHtml(name)+'</h3>'+html;
+      container.appendChild(wrap);
+    });
+    container.querySelectorAll('table').forEach(t=>{
+      t.style.borderCollapse='collapse';t.style.width='100%';t.style.fontSize='10px';
+      t.querySelectorAll('td,th').forEach(c=>{c.style.border='1px solid #999';c.style.padding='3px 5px';});
+    });
+    document.body.appendChild(container);
+    const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'a4',orientation:'landscape'});
+    doc.html(container,{
+      margin:[30,30,30,30],autoPaging:'text',html2canvas:{scale:0.6},
+      callback:function(doc){
+        doc.save(baseName(xlsFile.name)+'.pdf');
+        document.body.removeChild(container);
+        btn.textContent=orig;btn.disabled=false;
+      }
+    });
+  }catch(e){
+    alert('Erreur lors de la conversion : '+e.message);
+    btn.textContent=orig;btn.disabled=false;
+  }
+}
+
+/* Extraction commune du texte d'un PDF (regroupé par lignes) */
+async function extractPdfLines(file){
+  const buf=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+  const allLines=[];
+  for(let p=1;p<=pdf.numPages;p++){
+    const page=await pdf.getPage(p);
+    const content=await page.getTextContent();
+    let lastY=null,cur=[];
+    content.items.forEach(it=>{
+      const y=it.transform[5];
+      if(lastY!==null&&Math.abs(y-lastY)>2){allLines.push(cur.join(' '));cur=[];}
+      cur.push(it.str);lastY=y;
+    });
+    if(cur.length)allLines.push(cur.join(' '));
+    if(p<pdf.numPages)allLines.push('');
+  }
+  return allLines;
+}
+
+/* PDF -> DOCX (texte, ouvrable dans Word) */
+let pdfFile1=null;
+wireFileDrop(document.getElementById('pdf2docx-drop'),document.getElementById('pdf2docx-input'),f=>{
+  pdfFile1=f;document.getElementById('pdf2docx-filename').textContent='Fichier sélectionné : '+f.name;
+});
+async function convertPdfToDocx(){
+  if(!pdfFile1){alert('Sélectionnez un fichier PDF.');return;}
+  const btn=event.target,orig=btn.textContent;btn.textContent='Extraction en cours…';btn.disabled=true;
+  try{
+    const lines=await extractPdfLines(pdfFile1);
+    const paragraphs=lines.map(l=>'<p>'+(l.trim()?escapeHtml(l):'&nbsp;')+'</p>').join('');
+    const htmlDoc='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>'+escapeHtml(baseName(pdfFile1.name))+'</title></head><body style="font-family:Calibri,Arial,sans-serif;font-size:12pt;">'+paragraphs+'</body></html>';
+    const blob=new Blob(['\ufeff',htmlDoc],{type:'application/msword'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=baseName(pdfFile1.name)+'.doc';a.click();
+  }catch(e){
+    alert('Erreur lors de l\'extraction : '+e.message);
+  }
+  btn.textContent=orig;btn.disabled=false;
+}
+
+/* PDF -> XLSX (texte réparti en colonnes au mieux) */
+let pdfFile2=null;
+wireFileDrop(document.getElementById('pdf2xls-drop'),document.getElementById('pdf2xls-input'),f=>{
+  pdfFile2=f;document.getElementById('pdf2xls-filename').textContent='Fichier sélectionné : '+f.name;
+});
+async function convertPdfToXls(){
+  if(!pdfFile2){alert('Sélectionnez un fichier PDF.');return;}
+  const btn=event.target,orig=btn.textContent;btn.textContent='Extraction en cours…';btn.disabled=true;
+  try{
+    const lines=await extractPdfLines(pdfFile2);
+    const rows=lines.map(line=>{
+      const cols=line.split(/\t|\s{2,}/).map(c=>c.trim()).filter(c=>c.length);
+      return cols.length?cols:[line];
+    });
+    const ws=XLSX.utils.aoa_to_sheet(rows);
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Texte extrait');
+    XLSX.writeFile(wb,baseName(pdfFile2.name)+'.xlsx');
+  }catch(e){
+    alert('Erreur lors de l\'extraction : '+e.message);
+  }
+  btn.textContent=orig;btn.disabled=false;
 }
 
 /* ---------- 2. Image compressor ---------- */
@@ -685,12 +916,23 @@ function copyPwd(){
 }
 
 /* ---------- 7. Translator ---------- */
+const LANGS=[
+  ['fr','Français'],['en','Anglais'],['de','Allemand'],['es','Espagnol'],['it','Italien'],
+  ['pt','Portugais'],['nl','Néerlandais'],['ru','Russe'],['ar','Arabe'],['zh-CN','Chinois (simplifié)'],
+  ['ja','Japonais'],['ko','Coréen'],['pl','Polonais'],['tr','Turc'],['sv','Suédois'],
+  ['da','Danois'],['no','Norvégien'],['fi','Finnois'],['el','Grec'],['hi','Hindi'],
+  ['vi','Vietnamien'],['uk','Ukrainien'],['ro','Roumain'],['hu','Hongrois'],['cs','Tchèque'],['id','Indonésien']
+];
+function fillTrn(){
+  const from=document.getElementById('trn-from'),to=document.getElementById('trn-to');
+  LANGS.forEach(([code,label])=>{from.add(new Option(label,code));to.add(new Option(label,code));});
+  from.value='en';to.value='fr';
+}
 function trnCheck(){
   const f=document.getElementById('trn-from'),t=document.getElementById('trn-to');
   if(f.value===t.value){
-    // si identiques, on bascule la cible vers une autre langue
-    const others=['fr','en','de'].filter(l=>l!==f.value);
-    t.value=others[0];
+    const other=LANGS.find(([c])=>c!==f.value);
+    if(other)t.value=other[0];
   }
 }
 function swapTrn(){
@@ -728,8 +970,20 @@ function copyTrn(){
   });
 }
 
+/* ---------- Theme toggle ---------- */
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem('theme',t);
+  document.getElementById('theme-toggle').textContent = t==='light' ? '🌙' : '☀️';
+}
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme')||'dark';
+  applyTheme(cur==='dark'?'light':'dark');
+}
+
 /* init */
-fillCur();pctLabels();
+applyTheme(localStorage.getItem('theme')||'dark');
+fillCur();pctLabels();fillTrn();
 </script>
 </body>
 </html>
