@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact — outilsweb-pro.com</title>
-<meta name="description" content="Contactez l'équipe de mesoutils.com : suggestions d'outils, remarques, signalement d'un problème ou toute autre question.">
+<meta name="description" content="Contactez l'équipe de outilsweb-pro.com : suggestions d'outils, remarques, signalement d'un problème ou toute autre question.">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
   <div class="nav">
-    <a class="brand" href="index.html"><span class="dot"></span>mesoutils<small>.com</small></a>
+    <a class="brand" href="index.html"><span class="dot"></span>outilsweb-pro<small>.com</small></a>
     <nav class="nav-links">
       <a href="index.html">Outils</a>
       <a href="guides.html">Guides</a>
@@ -29,7 +29,7 @@
 
     <div class="card">
       <p style="margin:0">Vous pouvez nous écrire directement à&nbsp;:<br>
-      <strong style="font-size:18px"><a href="mailto:contact@mesoutils.com">contact@mesoutils.com</a></strong></p>
+      <strong style="font-size:18px"><a href="mailto:contact@outilsweb-pro.com">contact@outilsweb-pro.com</a></strong></p>
     </div>
 
     <h2>Ou utilisez le formulaire</h2>
@@ -64,7 +64,7 @@
 <footer>
   <div class="foot">
     <div>
-      <a class="brand" href="index.html" style="margin-bottom:10px"><span class="dot"></span>mesoutils<small>.com</small></a>
+      <a class="brand" href="index.html" style="margin-bottom:10px"><span class="dot"></span>outilsweb-pro<small>.com</small></a>
       <p>Des outils en ligne gratuits, rapides et respectueux de votre vie privée.</p>
     </div>
     <div class="foot-links">
@@ -88,9 +88,9 @@ function sendContact(){
   var email=document.getElementById('c-email').value.trim();
   var msg=document.getElementById('c-msg').value.trim();
   if(!msg){alert('Merci d\'écrire un message.');return;}
-  var subject=encodeURIComponent('Message de '+(name||'un visiteur')+' — mesoutils.com');
+  var subject=encodeURIComponent('Message de '+(name||'un visiteur')+' — outilsweb-pro.com');
   var body=encodeURIComponent(msg+'\n\n— '+name+' ('+email+')');
-  window.location.href='mailto:contact@mesoutils.com?subject='+subject+'&body='+body;
+  window.location.href='mailto:contact@outilsweb-pro.com?subject='+subject+'&body='+body;
 }
 </script>
 
