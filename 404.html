@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    // Récupère le chemin demandé (ex: /pdf)
+    var path = window.location.pathname;
+    // Redirige vers index.html en passant le chemin en paramètre
+    window.location.replace("/?tool=" + path.substring(1));
+  </script>
+</head>
+<body></body>
+</html>
