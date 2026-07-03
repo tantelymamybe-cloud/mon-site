@@ -1145,7 +1145,42 @@ fillCur();pctLabels();fillTrn();
         <a href="#" class="share-btn btn-x" id="share-x" title="Partager sur X">X (Twitter)</a>
     </div>
 </div>
-<script src="partage.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // On récupère l'adresse de votre site outilsweb-pro.com
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(document.title);
+
+    // Au clic sur Facebook
+    const fb = document.getElementById('share-fb');
+    if(fb) fb.addEventListener('click', function(e) { 
+        e.preventDefault(); 
+        window.open('https://facebook.com' + url, '_blank', 'width=600,height=400'); 
+    });
+
+    // Au clic sur WhatsApp
+    const wa = document.getElementById('share-wa');
+    if(wa) wa.addEventListener('click', function(e) { 
+        e.preventDefault(); 
+        window.open('https://whatsapp.com' + text + '%20' + url, '_blank'); 
+    });
+
+    // Au clic sur LinkedIn
+    const li = document.getElementById('share-li');
+    if(li) li.addEventListener('click', function(e) { 
+        e.preventDefault(); 
+        window.open('https://linkedin.com' + url, '_blank', 'width=600,height=500'); 
+    });
+
+    // Au clic sur X (Twitter)
+    const x = document.getElementById('share-x');
+    if(x) x.addEventListener('click', function(e) { 
+        e.preventDefault(); 
+        window.open('https://x.com' + url + '&text=' + text, '_blank', 'width=600,height=400'); 
+    });
+});
+</script>
+
 
 </div>
 </body>
