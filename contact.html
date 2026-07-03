@@ -1,143 +1,199 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact — mesoutils.com</title>
-<meta name="description" content="Contactez l'équipe de mesoutils.com : suggestions d'outils, remarques, signalement d'un problème ou toute autre question.">
-<link rel="stylesheet" href="style.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5107051705652650"
-     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — outilsweb-pro</title>
+    
+    <!-- Lien pour l'icône de l'onglet -->
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <style>
+        /* Styles Généraux - Mode Sombre */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a; /* Fond bleu nuit de la page principale */
+            color: #f8fafc; /* Texte blanc/clair */
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Barre de navigation */
+        header {
+            background-color: #1e293b;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .logo span { color: #38bdf8; }
+        nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 15px;
+        }
+        nav a:hover { color: #38bdf8; }
+
+        /* Conteneur principal */
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3 {
+            color: #ffffff;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #38bdf8;
+            padding-bottom: 10px;
+        }
+        h2 {
+            font-size: 22px;
+            margin-top: 40px;
+            color: #38bdf8;
+        }
+        
+        a { color: #38bdf8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* Formulaire de Contact Moderne */
+        form {
+            background-color: #1e293b;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            background-color: #0f172a;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus, textarea:focus {
+            border-color: #38bdf8;
+        }
+        button[type="submit"] {
+            background-color: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button[type="submit"]:hover {
+            background-color: #0ea5e9;
+        }
+
+        /* Section FAQ */
+        .faq-item {
+            margin-bottom: 25px;
+        }
+        .faq-item h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #f1f5f9;
+        }
+        .faq-item p {
+            color: #94a3b8;
+            margin: 0;
+            font-size: 15px;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <div class="nav">
-    <a class="brand" href="index.html"><span class="dot"></span>mesoutils<small>.com</small></a>
-    <nav class="nav-links">
-      <a href="index.html">Outils</a>
-      <a href="guides.html">Guides</a>
-      <a href="about.html">À propos</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </div>
-</header>
+    <!-- Menu du haut identique à l'accueil -->
+    <header>
+        <a href="index.html" class="logo">outilsweb-pro<span>.com</span></a>
+        <nav>
+            <a href="#">Outils</a>
+            <a href="#">Guides</a>
+            <a href="#">À propos</a>
+            <a href="#" style="color: #38bdf8;">Contact</a>
+        </nav>
+    </header>
 
-<main class="wrap">
-  <article>
-    <span class="eyebrow">On vous écoute</span>
-    <h1>Contact</h1>
-    <p class="lead">Une question, une idée d'outil, un bug à signaler ? Écrivez-nous, nous lisons tous les messages.</p>
+    <div class="container">
+        <!-- Textes de présentation -->
+        <h1>Contact</h1>
+        <p>Une question, une idée d'outil, un bug à signaler ? Écrivez-nous, nous lisons tous les messages.</p>
+        <p>Vous pouvez nous écrire directement à : <a href="mailto:contact@outilsweb-pro.com">contact@outilsweb-pro.com</a></p>
 
-    <div class="card">
-      <p style="margin:0">Vous pouvez nous écrire directement à&nbsp;:<br>
-      <strong style="font-size:18px"><a href="mailto:contact@outilsweb-pro.com">contact@outilsweb-pro.com</a></strong></p>
+        <!-- Formulaire de contact -->
+        <h2>Ou utilisez le formulaire</h2>
+        <p style="color: #94a3b8;">Remplissez les champs ci-dessous, votre message nous sera envoyé directement.</p>
+        
+        <form>
+            <div class="form-group">
+                <label for="name">Votre nom</label>
+                <input type="text" id="name" placeholder="Jean Dupont" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Votre email</label>
+                <input type="email" id="email" placeholder="vous@exemple.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Votre message</label>
+                <textarea id="message" rows="5" placeholder="Bonjour, j'aimerais vous suggérer..." required></textarea>
+            </div>
+            
+            <button type="submit">Envoyer le message</button>
+        </form>
+
+        <!-- Section Questions Fréquentes -->
+        <h2>Questions fréquentes</h2>
+        
+        <div class="faq-item">
+            <h3>Mes fichiers sont-ils en sécurité ?</h3>
+            <p>Oui. La plupart de nos outils traitent vos fichiers directement dans votre navigateur, sans rien envoyer sur internet. Pour en savoir plus, consultez notre <a href="#">politique de confidentialité</a>.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Les outils sont-ils vraiment gratuits ?</h3>
+            <p>Oui, tous nos outils sont entièrement gratuits et le resteront. Le site se finance grâce à une publicité discrète.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Puis-je suggérer un nouvel outil ?</h3>
+            <p>Avec plaisir ! C'est même comme ça que le site grandit. Envoyez-nous votre idée via le formulaire ci-dessus.</p>
+        </div>
     </div>
-
-    <h2>Ou utilisez le formulaire</h2>
-    <p>Remplissez les champs ci-dessous, votre message nous sera envoyé directement.</p>
-
-    <div class="field">
-      <label for="c-name">Votre nom</label>
-      <input type="text" id="c-name" placeholder="Jean Dupont">
-    </div>
-    <div class="field">
-      <label for="c-email">Votre email</label>
-      <input type="text" id="c-email" placeholder="vous@exemple.com">
-    </div>
-    <div class="field">
-      <label for="c-msg">Votre message</label>
-      <textarea id="c-msg" placeholder="Bonjour, j'aimerais vous suggérer..."></textarea>
-    </div>
-    <button class="btn" id="c-btn" onclick="sendContact()">Envoyer le message</button>
-    <p id="c-status" style="margin-top:10px;font-weight:600"></p>
-
-    <h2>Questions fréquentes</h2>
-    <h3>Mes fichiers sont-ils en sécurité ?</h3>
-    <p>Oui. La plupart de nos outils traitent vos fichiers directement dans votre navigateur, sans rien envoyer sur internet. Pour en savoir plus, consultez notre <a href="privacy.html">politique de confidentialité</a>.</p>
-    <h3>Les outils sont-ils vraiment gratuits ?</h3>
-    <p>Oui, tous nos outils sont entièrement gratuits et le resteront. Le site se finance grâce à une publicité discrète.</p>
-    <h3>Puis-je suggérer un nouvel outil ?</h3>
-    <p>Avec plaisir ! C'est même comme ça que le site grandit. Envoyez-nous votre idée via le formulaire ci-dessus.</p>
-  </article>
-</main>
-
-<div class="ad">Espace publicitaire (AdSense)</div>
-
-<footer>
-  <div class="foot">
-    <div>
-      <a class="brand" href="index.html" style="margin-bottom:10px"><span class="dot"></span>mesoutils<small>.com</small></a>
-      <p>Des outils en ligne gratuits, rapides et respectueux de votre vie privée.</p>
-    </div>
-    <div class="foot-links">
-      <strong>Outils</strong>
-      <a href="index.html">Tous les outils</a>
-      <a href="guides.html">Guides pratiques</a>
-    </div>
-    <div class="foot-links">
-      <strong>Le site</strong>
-      <a href="about.html">À propos</a>
-      <a href="privacy.html">Confidentialité</a>
-      <a href="contact.html">Contact</a>
-    </div>
-  </div>
-  <div class="copyright">© 2026 outilsweb-pro.com — Tous droits réservés.</div>
-</footer>
-
-<script>
-function sendContact(){
-  var name=document.getElementById('c-name').value.trim();
-  var email=document.getElementById('c-email').value.trim();
-  var msg=document.getElementById('c-msg').value.trim();
-  var status=document.getElementById('c-status');
-  var btn=document.getElementById('c-btn');
-
-  if(!msg){
-    status.style.color='#c0392b';
-    status.textContent='Merci d\'écrire un message.';
-    return;
-  }
-
-  btn.disabled=true;
-  btn.textContent='Envoi en cours…';
-  status.textContent='';
-
-  fetch('https://api.web3forms.com/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify({
-      access_key: 'c8d131b4-55f1-4893-b3df-746719dc73e1',
-      subject: 'Message de ' + (name || 'un visiteur') + ' — outilsweb-pro.com',
-      name: name || 'Visiteur anonyme',
-      email: email || 'non renseigné',
-      replyto: email || undefined,
-      message: msg
-    })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(data){
-    btn.disabled=false;
-    btn.textContent='Envoyer le message';
-    if(data.success){
-      status.style.color='#2e7d32';
-      status.textContent='Message envoyé ! Merci, nous vous répondrons rapidement.';
-      document.getElementById('c-name').value='';
-      document.getElementById('c-email').value='';
-      document.getElementById('c-msg').value='';
-    } else {
-      status.style.color='#c0392b';
-      status.textContent='Une erreur est survenue. Réessayez ou écrivez à contact@outilsweb-pro.com.';
-    }
-  })
-  .catch(function(){
-    btn.disabled=false;
-    btn.textContent='Envoyer le message';
-    status.style.color='#c0392b';
-    status.textContent='Une erreur est survenue. Réessayez ou écrivez à contact@outilsweb-pro.com.';
-  });
-}
-</script>
 
 </body>
 </html>
