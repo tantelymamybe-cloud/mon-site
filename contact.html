@@ -133,6 +133,119 @@
             font-size: 15px;
         }
     </style>
+        <style>
+        /* --- STYLE GENERAL MODE SOMBRE --- */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0f172a; /* Fond bleu nuit */
+            color: #f8fafc; /* Texte clair */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- BARRE DE NAVIGATION (HEADER) --- */
+        header {
+            background-color: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .brand {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff !important;
+            text-decoration: none;
+        }
+        .brand small { color: #38bdf8; font-size: 14px; }
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #38bdf8;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .nav-links a {
+            color: #cbd5e1 !important;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: #38bdf8 !important; }
+
+        /* --- CONTENU DE LA PAGE (WRAP) --- */
+        .wrap {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .eyebrow {
+            color: #38bdf8;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        h1 { font-size: 32px; margin-top: 5px; margin-bottom: 15px; color: #ffffff; }
+        h2 { font-size: 22px; margin-top: 40px; color: #ffffff; }
+        .lead { font-size: 16px; color: #94a3b8; }
+        
+        /* Liens */
+        a { color: #38bdf8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ---ENCADRE DE CONTACT (CARD) --- */
+        .card {
+            background-color: #1e293b;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            margin: 20px 0;
+        }
+
+        /* --- FORMULAIRE DE CONTACT --- */
+        form {
+            background-color: #1e293b;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            margin-top: 20px;
+        }
+        input[type="text"], input[type="email"], textarea {
+            width: 100%;
+            background-color: #0f172a;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            box-sizing: border-box;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+        input:focus, textarea:focus { border-color: #38bdf8; }
+        input[type="submit"], button {
+            background-color: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        input[type="submit"]:hover { background-color: #0ea5e9; }
+    </style>
+
 </head>
 <body>
 
