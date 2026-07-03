@@ -269,7 +269,79 @@
         <!-- Formulaire de contact -->
         <h2>Ou utilisez le formulaire</h2>
         <p style="color: #94a3b8;">Remplissez les champs ci-dessous, votre message nous sera envoyé directement.</p>
-        
+        <!-- Formulaire d'origine réparé et stylisé -->
+<form method="POST" action="" class="custom-form">
+    <div class="form-group">
+        <label>Votre nom</label>
+        <input type="text" name="nom" placeholder="Jean Dupont" required>
+    </div>
+    
+    <div class="form-group">
+        <label>Votre email</label>
+        <input type="email" name="email" placeholder="vous@exemple.com" required>
+    </div>
+    
+    <div class="form-group">
+        <label>Votre message</label>
+        <textarea name="message" rows="5" placeholder="Bonjour, j'aimerais vous suggérer..." required></textarea>
+    </div>
+    
+    <input type="submit" value="Envoyer le message" class="submit-btn">
+</form>
+
+<!-- Style pour forcer l'affichage moderne du formulaire -->
+<style>
+    .custom-form {
+        background-color: #1e293b !important;
+        padding: 25px !important;
+        border-radius: 8px !important;
+        border: 1px solid #334155 !important;
+        margin-top: 20px !important;
+        max-width: 100% !important;
+    }
+    .form-group {
+        display: flex !important;
+        flex-direction: column !important;
+        margin-bottom: 15px !important;
+    }
+    .form-group label {
+        color: #94a3b8 !important;
+        font-size: 14px !important;
+        margin-bottom: 5px !important;
+        font-family: sans-serif !important;
+    }
+    .custom-form input[type="text"],
+    .custom-form input[type="email"],
+    .custom-form textarea {
+        width: 100% !important;
+        background-color: #0f172a !important;
+        border: 1px solid #475569 !important;
+        border-radius: 6px !important;
+        padding: 12px !important;
+        color: #ffffff !important;
+        font-size: 15px !important;
+        box-sizing: border-box !important;
+        outline: none !important;
+    }
+    .custom-form input:focus, .custom-form textarea:focus {
+        border-color: #38bdf8 !important;
+    }
+    .submit-btn {
+        background-color: #38bdf8 !important;
+        color: #0f172a !important;
+        border: none !important;
+        padding: 12px 24px !important;
+        font-size: 15px !important;
+        font-weight: bold !important;
+        border-radius: 6px !important;
+        cursor: pointer !important;
+        transition: background-color 0.2s !important;
+    }
+    .submit-btn:hover {
+        background-color: #0ea5e9 !important;
+    }
+</style>
+
         <form>
             <div class="form-group">
                 <label for="name">Votre nom</label>
