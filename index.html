@@ -1135,53 +1135,37 @@ fillCur();pctLabels();fillTrn();
     slider.scrollLeft = scrollLeft - walk;
   });
 </script>
-<!-- Section Partage Réseaux Sociaux Stylisée -->
+<!-- Section Partage Réseaux Sociaux Stylisée (Liens directs) -->
 <div class="site-share-container">
     <p class="share-title">Partager notre site :</p>
     <div class="share-buttons-list">
-        <a href="#" class="share-btn btn-facebook" id="share-fb" title="Partager sur Facebook">Facebook</a>
-        <a href="#" class="share-btn btn-whatsapp" id="share-wa" title="Partager sur WhatsApp">WhatsApp</a>
-        <a href="#" class="share-btn btn-linkedin" id="share-li" title="Partager sur LinkedIn">LinkedIn</a>
-        <a href="#" class="share-btn btn-x" id="share-x" title="Partager sur X">X (Twitter)</a>
+        
+        <!-- Bouton Facebook -->
+        <a href="https://facebook.com" 
+           target="_blank" 
+           class="share-btn btn-facebook" 
+           title="Partager sur Facebook">Facebook</a>
+        
+        <!-- Bouton WhatsApp -->
+        <a href="https://whatsapp.com" 
+           target="_blank" 
+           class="share-btn btn-whatsapp" 
+           title="Partager sur WhatsApp">WhatsApp</a>
+        
+        <!-- Bouton LinkedIn -->
+        <a href="https://linkedin.com" 
+           target="_blank" 
+           class="share-btn btn-linkedin" 
+           title="Partager sur LinkedIn">LinkedIn</a>
+        
+        <!-- Bouton X (Twitter) -->
+        <a href="https://x.com" 
+           target="_blank" 
+           class="share-btn btn-x" 
+           title="Partager sur X">X (Twitter)</a>
+           
     </div>
 </div>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // On récupère l'adresse de votre site outilsweb-pro.com
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(document.title);
 
-    // Au clic sur Facebook
-    const fb = document.getElementById('share-fb');
-    if(fb) fb.addEventListener('click', function(e) { 
-        e.preventDefault(); 
-        window.open('https://facebook.com' + url, '_blank', 'width=600,height=400'); 
-    });
-
-    // Au clic sur WhatsApp
-    const wa = document.getElementById('share-wa');
-    if(wa) wa.addEventListener('click', function(e) { 
-        e.preventDefault(); 
-        window.open('https://whatsapp.com' + text + '%20' + url, '_blank'); 
-    });
-
-    // Au clic sur LinkedIn
-    const li = document.getElementById('share-li');
-    if(li) li.addEventListener('click', function(e) { 
-        e.preventDefault(); 
-        window.open('https://linkedin.com' + url, '_blank', 'width=600,height=500'); 
-    });
-
-    // Au clic sur X (Twitter)
-    const x = document.getElementById('share-x');
-    if(x) x.addEventListener('click', function(e) { 
-        e.preventDefault(); 
-        window.open('https://x.com' + url + '&text=' + text, '_blank', 'width=600,height=400'); 
-    });
-});
-</script>
-
-
-</div>
 </body>
 </html>
