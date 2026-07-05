@@ -102,66 +102,115 @@
   .hero p{max-width:650px;margin:0 auto;color:var(--muted);font-size:16px;line-height:1.6}
 
   /* ==================================================
-     NOUVEAU CONFIGURATION DE LA GRILLE FIXE ET CENTRÉE
+     CONFIGURATION DE LA GRILLE CENTRÉE ET DES CARTES
      ================================================== */
-  .tools-centered-grid {
-    display: grid !important;
-    /* Aligne automatiquement 3 colonnes stables sur PC et 1 sur Mobile */
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  .super-zone-centree {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important; /* Permet le passage à la ligne automatique */
+    justify-content: center !important; /* Centre horizontalement tous les blocs */
     gap: 24px !important;
-    max-width: 1080px !important;
+    max-width: 1100px !important;
     margin: 40px auto !important;
     padding: 0 20px !important;
-    justify-content: center !important;
   }
 
-  .tool-card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 26px 24px;
-    text-align: left;
-    cursor: pointer;
+  .super-carte-outil {
+    background: var(--surface) !important;
+    border: 1px solid var(--line) !important;
+    border-radius: var(--radius) !important;
+    padding: 26px 24px !important;
+    text-align: left !important;
+    cursor: pointer !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 14px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+    gap: 14px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-shadow: var(--shadow) !important;
+    
+    /* Dimensions fixes strictes sur PC */
+    width: 320px !important; 
+    min-width: 320px !important;
+    max-width: 320px !important;
+    box-sizing: border-box !important;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease !important;
   }
 
-  /* Au survol : effet d'élévation pro et lueur de couleur */
-  .tool-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--accent);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-  }
-  html[data-theme="light"] .tool-card:hover {
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  /* Effet d'élévation générale au survol */
+  .super-carte-outil:hover {
+    transform: translateY(-6px) !important;
   }
 
-  .tool-card .chip {
+  .super-carte-outil .chip {
     width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
     color: #fff; flex: none; font-size: 22px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   }
   
-  .tool-card h3 { font-size: 19px; font-weight: 700; color: var(--ink); margin-top: 4px; }
-  .tool-card p { font-size: 14.5px; color: var(--muted); line-height: 1.5; flex-grow: 1; }
+  .super-carte-outil h3 { font-size: 19px; font-weight: 700; color: var(--ink); margin-top: 4px; }
+  .super-carte-outil p { font-size: 14.5px; color: var(--muted); line-height: 1.5; flex-grow: 1; }
   
-  .tool-card .go {
+  .super-carte-outil .go {
     font-size: 14.5px; font-weight: 600; display: flex; align-items: center; gap: 6px;
     color: var(--accent); transition: 0.2s; margin-top: 10px;
   }
-  .tool-card:hover .go { gap: 10px; text-decoration: underline; }
+  .super-carte-outil:hover .go { gap: 10px; text-decoration: underline; }
   
-  /* Barre latérale décorative discrète au survol */
-  .tool-card::before {
+  /* Barre latérale décorative */
+  .super-carte-outil::before {
     content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
     background: var(--accent); opacity: 0; transition: .2s;
   }
-  .tool-card:hover::before { opacity: 1; }
+  .super-carte-outil:hover::before { opacity: 1; }
+
+  /* Ajustement pour mobile */
+  @media (max-width: 680px) {
+    .super-carte-outil {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+    }
+  }
+
+  /* ==================================================
+     HALOS LUMINEUX DYNAMIQUES AU SURVOL
+     ================================================== */
+  /* 1ère carte (Convertisseur PDF - Rouge) */
+  .super-zone-centree .super-carte-outil:nth-of-type(1):hover {
+    border-color: #FF3366 !important;
+    box-shadow: 0 14px 0px #0A0E17, 0 20px 40px rgba(255, 51, 102, 0.25) !important;
+  }
+  /* 2ème carte (Compresseur d'images - Bleu) */
+  .super-zone-centree .super-carte-outil:nth-of-type(2):hover {
+    border-color: #38BDF8 !important;
+    box-shadow: 0 14px 0px #0A0E17, 0 20px 40px rgba(56, 189, 248, 0.25) !important;
+  }
+  /* 3ème carte (Générateur QR Code - Violet) */
+  .super-zone-centree .super-carte-outil:nth-of-type(3):hover {
+    border-color: #A855F7 !important;
+    box-shadow: 0 14px 0px #0A0E17, 0 20px 40px rgba(168, 85, 247, 0.25) !important;
+  }
+  /* 4ème carte (Calcul de pourcentage - Jaune) */
+  .super-zone-centree .super-carte-outil:nth-of-type(4):hover {
+    border-color: #FBBF24 !important;
+    box-shadow: 0 14px 0px #0A0E17, 0 20px 40px rgba(251, 191, 36, 0.25) !important;
+  }
+  /* 5ème carte (Convertisseur de devises - Vert) */
+  .super-zone-centree .super-carte-outil:nth-of-type(5):hover {
+    border-color: #34D399 !important;
+    box-shadow: 0 14px 0px #0A0E17, 0 20px 40px rgba(52, 211, 153, 0.25) !important;
+  }
+  /* 6ème carte (Générateur de mots de passe - Rose) */
+  .super-zone-centree .super-carte-outil:nth-of-type(6):hover {
+    border-color: #F472B6 !important;
+    box-shadow: 0 14px 0px #0A0E17, 0 20px 40px rgba(244, 114, 182, 0.25) !important;
+  }
+  /* 7ème carte (Traducteur - Turquoise) */
+  .super-zone-centree .super-carte-outil:nth-of-type(7):hover {
+    border-color: #2DD4BF !important;
+    box-shadow: 0 14px 0px #0A0E17, 0 20px 40px rgba(45, 212, 191, 0.25) !important;
+  }
 </style>
 </head>
 <body>
@@ -185,78 +234,31 @@
 
   <main class="wrap">
     
-    <!-- Zone de présentation textuelle -->
     <section class="hero">
       <div class="eyebrow">Suite d'outils professionnels</div>
       <h1>Une suite d'outils performants exécutés localement dans votre navigateur</h1>
       <p>Vos documents et fichiers informatiques sont traités instantanément de manière totalement sécurisée, sans jamais transiter par un serveur externe.</p>
     </section>
 
-   <!-- GRILLE ULTRA-FORCÉE POUR ALIGNEMENT PC -->
-<div class="super-zone-centree">
-    
-    <!-- 1. Convertisseur PDF -->
-    <div class="super-carte-outil" style="--accent:#FB7185" onclick="openTool('pdf')">
-        <span class="chip" style="background:#FB7185">📄</span>
-        <h3>Convertisseur PDF</h3>
-        <p>Convertissez vos documents Word, Excel ou images au format PDF et vice-versa en un clic.</p>
-        <span class="go">Ouvrir l'outil &rarr;</span>
-    </div>
+    <!-- GRILLE ULTRA-FORCÉE POUR ALIGNEMENT PC -->
+    <div class="super-zone-centree">
+        
+        <!-- 1. Convertisseur PDF -->
+        <div class="super-carte-outil" style="--accent:#FB7185" onclick="openTool('pdf')">
+            <span class="chip" style="background:#FB7185">📄</span>
+            <h3>Convertisseur PDF</h3>
+            <p>Convertissez vos documents Word, Excel ou images au format PDF et vice-versa en un clic.</p>
+            <span class="go">Ouvrir l'outil &rarr;</span>
+        </div>
 
-    <!-- 2. Compresseur d'images -->
-    <div class="super-carte-outil" style="--accent:#38BDF8" onclick="openTool('img')">
-        <span class="chip" style="background:#38BDF8">🖼️</span>
-        <h3>Compresseur d'images</h3>
-        <p>Réduisez le poids de vos images (PNG, JPG, WebP) instantanément sans perte notable de qualité.</p>
-        <span class="go">Ouvrir l'outil &rarr;</span>
-    </div>
+        <!-- 2. Compresseur d'images -->
+        <div class="super-carte-outil" style="--accent:#38BDF8" onclick="openTool('img')">
+            <span class="chip" style="background:#38BDF8">🖼️</span>
+            <h3>Compresseur d'images</h3>
+            <p>Réduisez le poids de vos images (PNG, JPG, WebP) instantanément sans perte notable de qualité.</p>
+            <span class="go">Ouvrir l'outil &rarr;</span>
+        </div>
 
-    <!-- 3. Générateur QR Code -->
-    <div class="super-carte-outil" style="--accent:#A78BFA" onclick="openTool('qrcode')">
-        <span class="chip" style="background:#A78BFA">🔗</span>
-        <h3>Générateur QR Code</h3>
-        <p>Générez instantanément des QR codes sécurisés pour vos liens web, textes ou accès Wi-Fi.</p>
-        <span class="go">Ouvrir l'outil &rarr;</span>
-    </div>
-
-    <!-- 4. Calcul de pourcentage -->
-    <div class="super-carte-outil" style="--accent:#FBBF24" onclick="openTool('percentage')">
-        <span class="chip" style="background:#FBBF24">%</span>
-        <h3>Calcul de pourcentage</h3>
-        <p>Calculez facilement des remises, des augmentations ou de la TVA de manière automatique.</p>
-        <span class="go">Ouvrir l'outil &rarr;</span>
-    </div>
-
-    <!-- 5. Convertisseur de devises -->
-    <div class="super-carte-outil" style="--accent:#2DD4BF" onclick="openTool('currency')">
-        <span class="chip" style="background:#2DD4BF">💱</span>
-        <h3>Convertisseur de devises</h3>
-        <p>Accédez aux taux de change actualisés en temps réel pour plus de 30 devises mondiales.</p>
-        <span class="go">Ouvrir l'outil &rarr;</span>
-    </div>
-
-    <!-- 6. Générateur de mot de passe -->
-    <div class="super-carte-outil" style="--accent:#F472B6" onclick="openTool('password')">
-        <span class="chip" style="background:#F472B6">🔑</span>
-        <h3>Générateur de mot de passe</h3>
-        <p>Créez des mots de passe robustes et hautement sécurisés selon vos critères personnalisés.</p>
-        <span class="go">Ouvrir l'outil &rarr;</span>
-    </div>
-
-    <!-- 7. Traduction de texte -->
-    <div class="super-carte-outil" style="--accent:#2DD4BF" onclick="openTool('translation')">
-        <span class="chip" style="background:#2DD4BF">🌐</span>
-        <h3>Outil de Traduction</h3>
-        <p>Traduisez vos textes de manière fluide et rapide dans de nombreuses langues internationales.</p>
-        <span class="go">Ouvrir l'outil &rarr;</span>
-    </div>
-
-</div>
-
-
-    </div>
-
-  </main>
-
-</body>
-</html>
+        <!-- 3. Générateur QR Code -->
+        <div class="super-carte-outil" style="--accent:#A78BFA" onclick="openTool('qrcode')">
+            <span class="chip" style="background:#A78BFA">🔗</span>
