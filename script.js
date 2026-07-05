@@ -15,7 +15,7 @@ function showHome(){
 }
 
 function openTool(id){
-    document.getElementById('home').style.display='none';
+    document.getElementById('home').style.display='active';
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     const panel = document.getElementById('panel-'+id);
     if(panel) panel.classList.add('active');
