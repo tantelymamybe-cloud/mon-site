@@ -1,6 +1,0 @@
-# Autoriser les robots à explorer tout le site
-User-agent: *
-Allow: /
-
-# Indiquer l'emplacement du sitemap pour aider Google à indexer tes outils
-Sitemap: https://outilsweb-pro.com/sitemap.xml
