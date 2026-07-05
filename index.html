@@ -416,7 +416,8 @@
 
     <!-- NOUVELLE GRILLE : Flottante et glissante -->
    <!-- NOUVELLE GRILLE : Moderne, fixe et parfaitement centrée -->
-<div class="tools-centered-grid">
+<div style="display: grid !important; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important; gap: 24px !important; max-width: 1200px !important; margin: 40px auto !important; padding: 0 20px !important; justify-content: center !important;">
+
     
    <!-- Bloc 1 : Convertisseur PDF -->
     <div class="tool-card" style="--accent:var(--c-pdf)" onclick="openTool('pdf')">
