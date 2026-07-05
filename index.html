@@ -350,6 +350,26 @@
 
 .btn-x { background-color: #000000; border: 1px solid #334155; }
 .btn-x:hover { background-color: #111827; }
+/* --- CONFIGURATION DE LA GRILLE CENTRÉE POUR WINDOWS ET MOBILE --- */
+.tools-centered-grid {
+    display: grid !important;
+    /* Crée des colonnes automatiques qui se répartissent et se centrent tout seul sur PC */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 340px)) !important;
+    gap: 24px !important;
+    max-width: 1100px !important;
+    margin: 40px auto !important; /* Centre toute la grille au milieu de l'écran */
+    padding: 0 20px !important;
+    justify-content: center !important; /* Force le centrage horizontal des blocs */
+}
+
+/* On s'assure que chaque bloc prend bien sa place */
+.tools-centered-grid .tool-card {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+}
 
 </style>
   <!-- Icône du site dans l'onglet -->
