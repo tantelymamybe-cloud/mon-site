@@ -1,8 +1,10 @@
-/* --- CODE DE FORCE POUR GRILLE ET CARTES --- */
+/* ==================================================
+   CODE DE FORCE POUR GRILLE ET CARTES PRO
+   ================================================== */
 .super-zone-centree {
     display: flex !important;
     flex-direction: row !important;
-    flex-wrap: wrap !important; /* Force le passage à la ligne au lieu d'empiler verticalement */
+    flex-wrap: wrap !important; /* Force le passage à la ligne sur PC */
     justify-content: center !important; /* Centre parfaitement tous les blocs au milieu */
     gap: 24px !important;
     max-width: 1100px !important;
@@ -14,29 +16,28 @@
     background: var(--surface) !important;
     border: 1px solid var(--line) !important;
     border-radius: var(--radius) !important;
-    padding: 24px !important;
+    padding: 28px 24px !important;
     text-align: left !important;
     cursor: pointer !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 12px !important;
+    gap: 14px !important;
     position: relative !important;
     
-    /* TRÈS IMPORTANT : On fixe la taille exacte d'un bloc sur ordinateur */
+    /* FIXATION STRICTE DE LA TAILLE SUR PC */
     width: 320px !important; 
     min-width: 320px !important;
     max-width: 320px !important;
     box-sizing: border-box !important;
-    transition: transform 0.2s ease !important;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease !important;
 }
 
-/* Effet au survol */
+/* Effet d'élévation de base au survol */
 .super-carte-outil:hover {
-    transform: translateY(-5px) !important;
-    border-color: var(--accent) !important;
+    transform: translateY(-6px) !important;
 }
 
-/* Ajustement pour mobile */
+/* Ajustement parfait pour les smartphones */
 @media (max-width: 680px) {
     .super-carte-outil {
         width: 100% !important;
@@ -44,46 +45,49 @@
         max-width: 100% !important;
     }
 }
-/* On ajoute un halo de lumière coloré derrière chaque option au survol */
 
-/* 1ère carte (Convertisseur PDF - Icône Rouge) */
-article .card:nth-of-type(1):hover {
-  border-color: #FF3366;
-  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(255, 51, 102, 0.25);
+/* ==================================================
+   HALOS LUMINEUX DYNAMIQUES AU SURVOL (CORRIGÉS)
+   ================================================== */
+
+/* 1ère carte (Convertisseur PDF - Rouge) */
+.super-zone-centree .super-carte-outil:nth-of-type(1):hover {
+  border-color: #FF3366 !important;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(255, 51, 102, 0.25) !important;
 }
 
-/* 2ème carte (Compresseur d'images - Icône Bleue) */
-article .card:nth-of-type(2):hover {
-  border-color: #38BDF8;
-  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(56, 189, 248, 0.25);
+/* 2ème carte (Compresseur d'images - Bleu) */
+.super-zone-centree .super-carte-outil:nth-of-type(2):hover {
+  border-color: #38BDF8 !important;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(56, 189, 248, 0.25) !important;
 }
 
-/* 3ème carte (Générateur QR Code - Icône Violette) */
-article .card:nth-of-type(3):hover {
-  border-color: #A855F7;
-  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(168, 85, 247, 0.25);
+/* 3ème carte (Générateur QR Code - Violet) */
+.super-zone-centree .super-carte-outil:nth-of-type(3):hover {
+  border-color: #A855F7 !important;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(168, 85, 247, 0.25) !important;
 }
 
-/* 4ème carte (Calcul de pourcentage - Icône Jaune) */
-article .card:nth-of-type(4):hover {
-  border-color: #FBBF24;
-  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(251, 191, 36, 0.25);
+/* 4ème carte (Calcul de pourcentage - Jaune) */
+.super-zone-centree .super-carte-outil:nth-of-type(4):hover {
+  border-color: #FBBF24 !important;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(251, 191, 36, 0.25) !important;
 }
 
-/* 5ème carte (Convertisseur de devises - Icône Verte) */
-article .card:nth-of-type(5):hover {
-  border-color: #34D399;
-  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(52, 211, 153, 0.25);
+/* 5ème carte (Convertisseur de devises - Vert) */
+.super-zone-centree .super-carte-outil:nth-of-type(5):hover {
+  border-color: #34D399 !important;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(52, 211, 153, 0.25) !important;
 }
 
-/* 6ème carte (Générateur de mots de passe - Icône Rose) */
-article .card:nth-of-type(6):hover {
-  border-color: #F472B6;
-  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(244, 114, 182, 0.25);
+/* 6ème carte (Générateur de mots de passe - Rose) */
+.super-zone-centree .super-carte-outil:nth-of-type(6):hover {
+  border-color: #F472B6 !important;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(244, 114, 182, 0.25) !important;
 }
 
-/* 7ème carte (Traducteur - Icône Turquoise) */
-article .card:nth-of-type(7):hover {
-  border-color: #2DD4BF;
-  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(45, 212, 191, 0.25);
+/* 7ème carte (Traducteur - Turquoise) */
+.super-zone-centree .super-carte-outil:nth-of-type(7):hover {
+  border-color: #2DD4BF !important;
+  box-shadow: 0 14px 0px #08090f, 0 20px 40px rgba(45, 212, 191, 0.25) !important;
 }
