@@ -351,6 +351,92 @@
 .btn-x { background-color: #000000; border: 1px solid #334155; }
 .btn-x:hover { background-color: #111827; }
 
+/* --- DESIGN GLOBAL DE LA PAGE ET DE LA GRILLE CENTRÉE --- */
+.tools-centered-grid {
+    display: grid;
+    /* Crée automatiquement des colonnes de 300px min qui se centrent toutes seules */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    max-width: 1100px; /* Élargit la zone pour un rendu pro sur Windows */
+    margin: 40px auto; /* Centre parfaitement toute la grille au milieu de la page */
+    padding: 0 24px;
+    justify-content: center;
+    justify-items: center; /* Force les blocs à rester centrés */
+}
+
+/* --- DESIGN AVANCÉ DES BLOCS (TOOL CARDS) --- */
+.tool-card-modern {
+    background: #1e293b; /* Fond bleu nuit légèrement plus clair que le fond du site */
+    border: 1px solid #334155;
+    border-radius: 16px; /* Coins plus arrondis pour un effet moderne */
+    padding: 28px;
+    width: 100%;
+    max-width: 340px; /* Taille parfaite pour chaque bloc */
+    box-sizing: border-box;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Effet de survol premium */
+.tool-card-modern:hover {
+    transform: translateY(-5px); /* Le bloc se soulève légèrement */
+    border-color: #38bdf8; /* La bordure s'illumine en bleu cyan */
+    box-shadow: 0 12px 24px -10px rgba(56, 189, 248, 0.15); /* Légère lueur sous le bloc */
+}
+
+/* Style de la petite pastille contenant l'icône */
+.chip-modern {
+    font-size: 24px;
+    background-color: rgba(56, 189, 248, 0.1); /* Fond bleu transparent très doux */
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Titre de l'outil */
+.tool-card-modern h3 {
+    margin: 0 0 10px 0;
+    color: #ffffff;
+    font-size: 19px;
+    font-weight: 600;
+    font-family: system-ui, sans-serif;
+}
+
+/* Description de l'outil */
+.tool-card-modern p {
+    margin: 0 0 20px 0;
+    color: #94a3b8; /* Gris doux pour un excellent contraste */
+    font-size: 14.5px;
+    line-height: 1.6;
+    font-family: system-ui, sans-serif;
+    flex-grow: 1; /* Aligne le bouton du bas au même niveau sur tous les blocs */
+}
+
+/* Le lien d'action "Ouvrir l'outil" */
+.go-modern {
+    color: #38bdf8;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: system-ui, sans-serif;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.tool-card-modern:hover .go-modern {
+    color: #7dd3fc; /* Le texte devient un peu plus clair au survol du bloc */
+    text-decoration: underline;
+}
 
 </style>
   <!-- Icône du site dans l'onglet -->
@@ -398,7 +484,29 @@
 
 
     <!-- NOUVELLE GRILLE : Flottante et glissante -->
-    <div class="tools-grid" style="display: flex !important; flex-direction: row !important; overflow-x: auto !important; gap: 20px; padding: 20px; scrollbar-width: none; cursor: grab; user-select: none;">
+   <!-- NOUVELLE GRILLE : Moderne, fixe et parfaitement centrée -->
+<div class="tools-centered-grid">
+    
+    <!-- Bloc 1 : Convertisseur PDF (Ligne 402) -->
+    <div class="tool-card-modern" onclick="openTool('pdf')">
+        <span class="chip-modern">📄</span>
+        <h3>Convertisseur PDF</h3>
+        <p>Images, Word, Excel vers PDF — et PDF vers Word/Excel.</p>
+        <span class="go-modern">Ouvrir l'outil &rarr;</span>
+    </div>
+
+    <!-- Bloc 2 : Compresseur d'images (Ligne 409) -->
+    <div class="tool-card-modern" onclick="openTool('img')">
+        <span class="chip-modern">🖼️</span>
+        <h3>Compresseur d'images</h3>
+        <p>Réduisez le poids de vos photos instantanément sans perdre la qualité.</p>
+        <span class="go-modern">Ouvrir l'outil &rarr;</span>
+    </div>
+
+    <!-- Répétez cette même structure pour vos 5 autres blocs (QR Code, Pourcentage, Devises, Mot de passe, Traduction) en changeant l'icône, le titre et le texte -->
+
+</div>
+
 
       <div class="tool-card" style="--accent:var(--c-pdf)" onclick="openTool('pdf')">
         <span class="chip" style="background:var(--c-pdf)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></span>
