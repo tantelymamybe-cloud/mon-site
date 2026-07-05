@@ -398,7 +398,7 @@
 
 
     <!-- NOUVELLE GRILLE : Flottante et glissante -->
-    <div class="grid">
+    <div class="tools-grid">
       <div class="tool-card" style="--accent:var(--c-pdf)" onclick="openTool('pdf')">
         <span class="chip" style="background:var(--c-pdf)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></span>
         <h3>Convertisseur PDF</h3>
@@ -1172,5 +1172,42 @@ fillCur();pctLabels();fillTrn();
            
     </div>
 </div>
+  <!-- Script pour glisser la grille d'outils à la souris -->
+<script>
+const slider = document.querySelector('.tools-grid');
+let isDown = false;
+let startX;
+let scrollLeft;
+
+if (slider) {
+    slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        slider.style.cursor = 'grabbing';
+        slider.style.scrollBehavior = 'auto'; // Désactive la fluidité pour un contrôle direct
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+    });
+
+    slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        slider.style.cursor = 'grab';
+    });
+
+    slider.addEventListener('mouseup', () => {
+        isDown = false;
+        slider.style.cursor = 'grab';
+        slider.style.scrollBehavior = 'smooth'; // Réactive le calage fluide
+    });
+
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 1.5; // Ajustez le chiffre (1.5) pour changer la vitesse
+        slider.scrollLeft = scrollLeft - walk;
+    });
+}
+</script>
+
 </body>
 </html>
