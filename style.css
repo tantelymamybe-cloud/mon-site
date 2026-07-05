@@ -1,3 +1,49 @@
+/* --- CODE DE FORCE POUR GRILLE ET CARTES --- */
+.super-zone-centree {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important; /* Force le passage à la ligne au lieu d'empiler verticalement */
+    justify-content: center !important; /* Centre parfaitement tous les blocs au milieu */
+    gap: 24px !important;
+    max-width: 1100px !important;
+    margin: 40px auto !important;
+    padding: 0 20px !important;
+}
+
+.super-carte-outil {
+    background: var(--surface) !important;
+    border: 1px solid var(--line) !important;
+    border-radius: var(--radius) !important;
+    padding: 24px !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    position: relative !important;
+    
+    /* TRÈS IMPORTANT : On fixe la taille exacte d'un bloc sur ordinateur */
+    width: 320px !important; 
+    min-width: 320px !important;
+    max-width: 320px !important;
+    box-sizing: border-box !important;
+    transition: transform 0.2s ease !important;
+}
+
+/* Effet au survol */
+.super-carte-outil:hover {
+    transform: translateY(-5px) !important;
+    border-color: var(--accent) !important;
+}
+
+/* Ajustement pour mobile */
+@media (max-width: 680px) {
+    .super-carte-outil {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+    }
+}
 /* On ajoute un halo de lumière coloré derrière chaque option au survol */
 
 /* 1ère carte (Convertisseur PDF - Icône Rouge) */
