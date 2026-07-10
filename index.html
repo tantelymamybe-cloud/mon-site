@@ -155,7 +155,7 @@
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
   }
-  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .nav{display:flex;align-items:center;justify-content:space-between;min-height:64px;flex-wrap:wrap;row-gap:8px;padding:8px 0}
   .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;cursor:pointer}
   .brand .dot{
     width:30px;height:30px;border-radius:9px;
@@ -379,11 +379,6 @@
     font-size:13.5px;cursor:pointer;font-family:inherit;text-decoration:underline;
   }
   .pro-modal .pro-note{font-size:12px;color:#7C88A6;text-align:center;margin-top:14px}
-
-  @media(max-width:720px){
-    .pro-cta-nav{display:none}
-    .pro-manage-nav{display:none}
-  }
 
   /* Footer */
   footer{margin-top:50px;border-top:1px solid var(--line);background:var(--surface)}
