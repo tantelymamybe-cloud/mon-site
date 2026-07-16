@@ -1,0 +1,26 @@
+{
+  "name": "outilsweb-pro — Vos outils en ligne gratuits",
+  "short_name": "outilsweb-pro",
+  "description": "Convertisseur PDF, compresseur PDF, fusion/découpage PDF, générateur de facture, compresseur d'images, QR code, pourcentage, devises, mot de passe et traducteur — 100% gratuit.",
+  "start_url": "/index.html",
+  "id": "/index.html",
+  "display": "standalone",
+  "background_color": "#0A0E17",
+  "theme_color": "#5B5FEF",
+  "lang": "fr",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
