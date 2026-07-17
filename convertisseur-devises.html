@@ -1105,9 +1105,9 @@ async function convertCur(){
   res.classList.add('show');res.innerHTML='Conversion en cours…';
   if(from===to){res.innerHTML=amount+' '+from+' = <b>'+amount+' '+to+'</b>';return;}
   try{
-    const r=await fetch('https://api.frankfurter.app/latest?amount='+amount+'&from='+from+'&to='+to);
+    const r=await fetch('https://api.frankfurter.dev/v1/latest?base='+from+'&symbols='+to);
     const d=await r.json();
-    const val=d.rates[to];
+    const val=amount*d.rates[to];
     res.innerHTML=amount+' '+from+' = <b>'+val.toLocaleString('fr-FR',{maximumFractionDigits:2})+' '+to+'</b><br><span class="hint">Taux du '+d.date+'</span>';
   }catch(e){
     res.innerHTML=_tr('Impossible de récupérer le taux. Vérifiez votre connexion internet.');
