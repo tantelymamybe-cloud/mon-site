@@ -277,6 +277,54 @@ async function manageSubscription() {
   }
 }
 
+/** Restauration multi-appareils sans compte : l'utilisateur saisit l'e-mail
+ *  de paiement, le Worker vérifie qu'un abonnement actif existe et réémet un
+ *  ticket sur cet appareil (même mécanisme que le retour de paiement). */
+async function restoreProAccess() {
+  const email = (prompt(_tr("Entrez l'e-mail utilisé lors de votre paiement pour retrouver votre accès PRO :")) || '').trim();
+  if (!email) return;
+  if (!email.includes('@')) { alert(_tr('Adresse e-mail invalide.')); return; }
+
+  showProToast(_tr('Recherche de votre abonnement…'));
+  try {
+    const res = await fetch(PRO_CONFIG.apiBase + '/api/restore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+    if (data.valid && data.token) {
+      localStorage.setItem('owp_pro_ticket', data.token);
+      await refreshProStateFromStorage();
+      proState.lastServerCheckAt = Date.now();
+      updateProUI();
+      closeProModal();
+      showProToast(_tr('✅ Accès PRO restauré sur cet appareil — bienvenue !'));
+    } else {
+      showProToast(_tr("Aucun abonnement actif trouvé pour cet e-mail. Vérifiez l'adresse saisie, ou contactez-nous."));
+    }
+  } catch (e) {
+    showProToast(_tr('Connexion au serveur impossible pour le moment. Réessayez dans un instant.'));
+  }
+}
+
+/** Injecte une seule fois le lien « Déjà abonné ? » dans la fenêtre PRO. */
+function ensureRestoreLink() {
+  const overlay = document.getElementById('pro-overlay');
+  if (!overlay || overlay.querySelector('.pro-restore-link')) return;
+  const link = document.createElement('a');
+  link.href = 'javascript:void(0)';
+  link.className = 'pro-restore-link';
+  link.textContent = _tr('Déjà abonné ? Restaurer mon accès');
+  link.style.cssText = 'display:block;margin-top:14px;text-align:center;font-size:13.5px;' +
+    'opacity:.85;text-decoration:underline;cursor:pointer;';
+  link.addEventListener('click', restoreProAccess);
+  const cta = overlay.querySelector('.pro-cta-btn');
+  const anchor = (cta && cta.parentElement) ? cta.parentElement
+    : (document.getElementById('pro-modal-sub') || overlay);
+  anchor.appendChild(link);
+}
+
 /**
  * À appeler en tout début de chaque fonction d'action d'un outil, ex :
  *   function compressPdf(){
@@ -316,6 +364,7 @@ function openProModal(toolId) {
       ? _tr('Vous avez atteint la limite gratuite du jour pour « ') + _tr(TOOL_LABELS[toolId]) + _tr(' ». Passez en PRO pour un usage illimité.')
       : _tr('Débloquez un usage illimité de tous les outils, sans limite quotidienne.');
   }
+  ensureRestoreLink();
   if (overlay) { overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
 }
 function closeProModal() {
