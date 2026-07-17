@@ -14,7 +14,7 @@ const PRO_CONFIG = {
   price: '4,99 $',
   freeLimitPerDay: 5,                      // valeur par défaut si un outil n'est pas listé ci-dessous
   revalidateAfterMs: 6 * 60 * 60 * 1000,    // tente un renouvellement du ticket toutes les 6h
-  successParam: 'client_ref',                // paramètre lu au retour de Lemon Squeezy
+  successParam: 'client_ref',                // paramètre lu au retour de Dodo Payments
 
   // Remplacez par l'URL de votre Worker une fois déployé, ex :
   //   'https://outilsweb-pro-api.VOTRE-SOUS-DOMAINE.workers.dev'
@@ -174,7 +174,7 @@ async function refreshProStateFromStorage() {
 /* Vérifications côté serveur (Worker) — émission et renouvellement       */
 /* ---------------------------------------------------------------------- */
 
-/** Appelé une fois au retour de Lemon Squeezy (?client_ref=...). Le webhook
+/** Appelé une fois au retour de Dodo Payments (?client_ref=...). Le webhook
  *  qui confirme le paiement peut arriver quelques secondes après le retour
  *  du navigateur : on réessaie plusieurs fois avant d'abandonner. */
 async function verifyCheckoutSession(clientRef) {
@@ -213,7 +213,7 @@ async function verifyCheckoutSession(clientRef) {
 }
 
 /** Renouvelle silencieusement le ticket en tâche de fond, et détecte les
- *  annulations d'abonnement (le Worker vérifie le statut réel côté Lemon Squeezy). */
+ *  annulations d'abonnement (le Worker vérifie le statut réel côté Dodo Payments). */
 async function revalidateLicense() {
   const ticket = localStorage.getItem('owp_pro_ticket');
   if (!ticket) return;
@@ -241,7 +241,7 @@ async function revalidateLicense() {
 /* Actions déclenchées par l'utilisateur                                  */
 /* ---------------------------------------------------------------------- */
 
-/** Redirige vers le checkout Lemon Squeezy (créé par le Worker) */
+/** Redirige vers le checkout Dodo Payments (créé par le Worker) */
 async function goToProCheckout() {
   const btn = document.querySelector('.pro-cta-btn');
   const original = btn ? btn.textContent : '';
@@ -258,7 +258,7 @@ async function goToProCheckout() {
   }
 }
 
-/** Ouvre le portail client Lemon Squeezy (gérer/annuler l'abonnement) */
+/** Ouvre le portail client Dodo Payments (gérer/annuler l'abonnement) */
 async function manageSubscription() {
   const ticket = localStorage.getItem('owp_pro_ticket');
   if (!ticket) { openProModal(); return; }
@@ -412,7 +412,7 @@ function renderUsageBanners() {
   refreshProStateFromStorage().then(updateProUI);
 
   if (sessionId) {
-    // Retour de Lemon Squeezy : nettoie l'URL tout de suite (évite de reverifier en boucle)
+    // Retour de Dodo Payments : nettoie l'URL tout de suite (évite de reverifier en boucle)
     params.delete(PRO_CONFIG.successParam);
     const cleanQuery = params.toString();
     const cleanUrl = window.location.pathname + (cleanQuery ? '?' + cleanQuery : '') + window.location.hash;
