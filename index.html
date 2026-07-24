@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="outilsweb-pro.com">
 <meta property="og:title" content="outilsweb-pro — Convertisseur, compresseur et fusion PDF, facture, QR code | Outils gratuits">
 <meta property="og:description" content="10 outils en ligne 100% gratuits : convertisseur PDF, compresseur PDF, fusion/découpage PDF, générateur de facture, compresseur d'images, QR code, pourcentage, devises, mot de passe, traducteur. Aucune inscription, tout se fait dans votre navigateur.">
-<meta property="og:url" content="https://outilsweb-pro.com/index.html">
+<meta property="og:url" content="https://outilsweb-pro.com/">
 <meta property="og:image" content="https://outilsweb-pro.com/og-image.png">
 <meta property="og:locale" content="fr_FR">
 <meta name="twitter:card" content="summary_large_image">
@@ -32,8 +32,8 @@
 <meta name="twitter:image" content="https://outilsweb-pro.com/og-image.png">
 
 <!-- Langues (préparation multilingue) -->
-<link rel="alternate" hreflang="fr" href="https://outilsweb-pro.com/index.html">
-<link rel="alternate" hreflang="x-default" href="https://outilsweb-pro.com/index.html">
+<link rel="alternate" hreflang="fr" href="https://outilsweb-pro.com/">
+<link rel="alternate" hreflang="x-default" href="https://outilsweb-pro.com/">
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
@@ -460,7 +460,7 @@
 
 <header>
   <div class="wrap nav">
-    <div class="brand" onclick="location.href='index.html'">
+    <div class="brand" onclick="location.href='/'">
       <span class="dot"></span>
       outilsweb-pro<small>.com</small>
     </div>
@@ -569,7 +569,7 @@
 <footer>
   <div class="wrap foot">
     <div>
-      <div class="brand" style="margin-bottom:10px;cursor:pointer" onclick="location.href='index.html'"><span class="dot"></span>outilsweb-pro<small>.com</small></div>
+      <div class="brand" style="margin-bottom:10px;cursor:pointer" onclick="location.href='/'"><span class="dot"></span>outilsweb-pro<small>.com</small></div>
       <p data-i18n>Des outils en ligne gratuits, rapides et respectueux de votre vie privée. Tout fonctionne dans votre navigateur.</p>
     </div>
     <div class="foot-links">
@@ -648,7 +648,7 @@ function openTool(id){
 })();
 
 /* ---------- Partage social ---------- */
-function shareUrl(toolId){return 'https://outilsweb-pro.com/index.html#'+toolId;}
+function shareUrl(toolId){return 'https://outilsweb-pro.com/#'+toolId;}
 function initShareBars(){
   document.querySelectorAll('.share-bar').forEach(bar=>{
     const toolId=bar.dataset.tool,title=bar.dataset.title||'outilsweb-pro.com';
