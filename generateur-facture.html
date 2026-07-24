@@ -421,6 +421,117 @@ if(typeof _tr!=='function'){ window._tr=function(s){ return s; }; }
   .trust-row span{background:var(--surface-2);border:1px solid var(--line);padding:7px 14px;border-radius:10px;font-size:13px;color:var(--muted)}
   @media(max-width:640px){.trust-row{gap:8px}}
 </style>
+   <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+
+    {
+      "@type": "WebApplication",
+      "@id": "https://outilsweb-pro.com/generateur-facture.html#app",
+      "name": "Générateur de facture en ligne",
+      "url": "https://outilsweb-pro.com/generateur-facture.html",
+      "description": "Créez une facture professionnelle en PDF en quelques secondes : calcul automatique de la TVA et des totaux, ajout de votre logo, choix parmi plus de 35 devises. Gratuit, sans inscription, et toutes les données restent dans votre navigateur.",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "Facturation",
+      "operatingSystem": "Web (Chrome, Firefox, Safari, Edge)",
+      "browserRequirements": "Requiert JavaScript activé",
+      "inLanguage": "fr-FR",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock"
+      },
+      "featureList": [
+        "Calcul automatique du sous-total, de la TVA et du total",
+        "Ajout du logo de votre entreprise",
+        "Plus de 35 devises disponibles",
+        "Nombre de lignes de prestations illimité",
+        "Téléchargement immédiat au format PDF",
+        "Traitement 100% local : aucune donnée envoyée sur un serveur"
+      ],
+      "screenshot": "https://outilsweb-pro.com/og-image.png",
+      "publisher": {
+        "@id": "https://outilsweb-pro.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://outilsweb-pro.com/#website"
+      }
+    },
+
+    {
+      "@type": "FAQPage",
+      "@id": "https://outilsweb-pro.com/generateur-facture.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Cette facture est-elle légalement valable ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Le PDF généré contient les éléments de base d'une facture (parties, date, numéro, détail, TVA, total). Selon votre pays et statut juridique, des mentions obligatoires supplémentaires peuvent être exigées (SIRET, numéro de TVA intracommunautaire, mentions légales) : pensez à les ajouter dans le champ notes ou votre adresse si besoin."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Puis-je ajouter autant de lignes que je veux ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Oui, cliquez sur « Ajouter une ligne » autant de fois que nécessaire, et supprimez une ligne avec le bouton ✕."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Comment la TVA est-elle calculée ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Elle s'applique sur le sous-total (somme des quantités × prix unitaires) au taux que vous indiquez. Mettez 0 si vous n'êtes pas assujetti à la TVA."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Mes données de facturation sont-elles sauvegardées ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Non, rien n'est enregistré. Si vous fermez l'onglet, les informations saisies sont perdues — pensez à télécharger votre PDF avant de quitter la page."
+          }
+        }
+      ]
+    },
+
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://outilsweb-pro.com/generateur-facture.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Accueil",
+          "item": "https://outilsweb-pro.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Générateur de facture"
+        }
+      ]
+    },
+
+    {
+      "@type": "WebPage",
+      "@id": "https://outilsweb-pro.com/generateur-facture.html#webpage",
+      "url": "https://outilsweb-pro.com/generateur-facture.html",
+      "name": "Générateur de facture gratuit en ligne — PDF instantané",
+      "description": "Créez une facture professionnelle en PDF en quelques secondes : calculs automatiques, mise en page soignée, 100% gratuit et sans inscription.",
+      "inLanguage": "fr-FR",
+      "isPartOf": { "@id": "https://outilsweb-pro.com/#website" },
+      "breadcrumb": { "@id": "https://outilsweb-pro.com/generateur-facture.html#breadcrumb" },
+      "mainEntity": { "@id": "https://outilsweb-pro.com/generateur-facture.html#app" }
+    }
+
+  ]
+}
+</script>
 </head>
 <body>
 
