@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur de facture — outilsweb-pro</title>
+<meta name="description" content="Créez et réutilisez vos factures professionnelles en PDF : entreprise enregistrée, répertoire clients, numérotation automatique et historique. Gratuit, sans inscription, 100% dans votre navigateur.">
+<link rel="canonical" href="https://outilsweb-pro.com/generateur-facture.html">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0a0e17;
+    --surface:#111725;
+    --surface-2:#161d2e;
+    --line:#232c40;
+    --line-soft:#1b2334;
+    --text:#e8edf6;
+    --text-dim:#98a3b8;
+    --text-faint:#64708a;
+    --accent:#22c55e;
+    --accent-dim:#16a34a;
+    --accent-soft:rgba(34,197,94,.12);
+    --danger:#ef4444;
+    --radius:14px;
+    --radius-sm:9px;
+  }
+  [data-theme="light"]{
+    --bg:#f5f7fa;
+    --surface:#ffffff;
+    --surface-2:#f1f4f8;
+    --line:#d8dee8;
+    --line-soft:#e6eaf1;
+    --text:#1a2233;
+    --text-dim:#556074;
+    --text-faint:#8b95a7;
+    --accent:#16a34a;
+    --accent-dim:#15803d;
+    --accent-soft:rgba(22,163,74,.10);
+  }
+  [data-theme="light"] body{background:var(--bg)}
+  [data-theme="light"] header.top{background:rgba(245,247,250,.9)}
+  [data-theme="light"] .brand .logo{color:#fff}
+  [data-theme="light"] #toast{box-shadow:0 12px 40px rgba(30,41,59,.18)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:var(--bg);color:var(--text);
+    line-height:1.5;-webkit-font-smoothing:antialiased;
+    padding-bottom:60px;
+  }
+  a{color:var(--accent);text-decoration:none}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+
+  header.top{
+    border-bottom:1px solid var(--line-soft);
+    padding:22px 0 0;position:sticky;top:0;z-index:20;
+    background:rgba(10,14,23,.92);backdrop-filter:blur(10px);
+  }
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .brand .logo{width:30px;height:30px;border-radius:8px;background:var(--accent);
+    display:grid;place-items:center;color:#04140a;font-weight:800;font-size:18px}
+  .brand b{font-size:17px;letter-spacing:-.2px}
+  .brand span{color:var(--text-faint);font-weight:400}
+
+  nav.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+  nav.tabs::-webkit-scrollbar{display:none}
+  .tab{
+    background:none;border:none;color:var(--text-dim);
+    padding:12px 16px;font-size:14.5px;font-weight:600;cursor:pointer;
+    border-bottom:2px solid transparent;white-space:nowrap;font-family:inherit;
+    transition:color .15s;
+  }
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+  main{padding-top:30px}
+  .panel{display:none;animation:fade .25s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .card{
+    background:var(--surface);border:1px solid var(--line-soft);
+    border-radius:var(--radius);padding:22px;margin-bottom:18px;
+  }
+  .card h2{font-size:13px;text-transform:uppercase;letter-spacing:.9px;
+    color:var(--text-faint);margin-bottom:16px;font-weight:700;
+    display:flex;align-items:center;gap:8px}
+  .card h2 .step{width:20px;height:20px;border-radius:6px;background:var(--accent-soft);
+    color:var(--accent);display:grid;place-items:center;font-size:11px;font-weight:800}
+
+  label{display:block;font-size:12.5px;color:var(--text-dim);margin-bottom:6px;font-weight:600}
+  input,textarea,select{
+    width:100%;background:var(--surface-2);border:1px solid var(--line);
+    color:var(--text);padding:11px 13px;border-radius:var(--radius-sm);
+    font-size:14.5px;font-family:inherit;transition:border-color .15s;
+  }
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
+  input::placeholder,textarea::placeholder{color:var(--text-faint)}
+  textarea{resize:vertical;min-height:70px}
+  .field{margin-bottom:14px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:640px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  .btn{
+    background:var(--accent);color:#04140a;border:none;
+    padding:12px 20px;border-radius:var(--radius-sm);font-size:14.5px;
+    font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;
+    display:inline-flex;align-items:center;gap:7px;
+  }
+  .btn:hover{background:var(--accent-dim)}
+  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+  .btn.ghost:hover{border-color:var(--text-dim);background:var(--surface-2)}
+  .btn.sm{padding:8px 13px;font-size:13px}
+  .btn.danger{background:transparent;color:var(--danger);border:1px solid transparent}
+  .btn.danger:hover{background:rgba(239,68,68,.1)}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+
+  .hint{font-size:12.5px;color:var(--text-faint);margin-top:7px;line-height:1.5}
+  .inline-link{background:none;border:none;color:var(--accent);cursor:pointer;
+    font-size:13px;font-weight:600;font-family:inherit;padding:0;text-decoration:underline}
+
+  /* lignes de prestation */
+  table.lines{width:100%;border-collapse:collapse}
+  table.lines th{font-size:11px;text-transform:uppercase;letter-spacing:.6px;
+    color:var(--text-faint);text-align:left;padding:0 8px 8px;font-weight:700}
+  table.lines td{padding:5px 8px 5px 0;vertical-align:top}
+  table.lines td:first-child{padding-left:0}
+  .line-row td input{padding:9px 10px}
+  .col-desc{width:44%}.col-qty{width:14%}.col-price{width:20%}.col-total{width:16%}.col-x{width:34px}
+  .line-total{padding:9px 4px;font-variant-numeric:tabular-nums;color:var(--text-dim);
+    font-size:14px;white-space:nowrap;text-align:right}
+  .rm{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:18px;
+    padding:6px;line-height:1;border-radius:6px}
+  .rm:hover{color:var(--danger);background:rgba(239,68,68,.1)}
+  @media(max-width:640px){
+    table.lines,table.lines tbody,table.lines tr,table.lines td{display:block;width:100%}
+    table.lines thead{display:none}
+    .line-row{background:var(--surface-2);border:1px solid var(--line);
+      border-radius:var(--radius-sm);padding:12px;margin-bottom:12px;position:relative}
+    .line-row td{padding:6px 0}
+    .line-total{text-align:left}
+    .col-x{position:absolute;top:8px;right:8px}
+  }
+
+  /* totaux */
+  .totals{margin-left:auto;max-width:320px;margin-top:18px}
+  .totals .row{display:flex;justify-content:space-between;padding:7px 0;font-size:14.5px;
+    color:var(--text-dim);font-variant-numeric:tabular-nums}
+  .totals .row.grand{border-top:1px solid var(--line);margin-top:6px;padding-top:13px;
+    font-size:19px;font-weight:800;color:var(--text)}
+  .totals .row.grand span:last-child{color:var(--accent)}
+
+  /* logo upload */
+  .logo-drop{border:1.5px dashed var(--line);border-radius:var(--radius-sm);
+    padding:20px;text-align:center;cursor:pointer;transition:border-color .15s}
+  .logo-drop:hover{border-color:var(--accent)}
+  .logo-preview{max-height:70px;max-width:180px;border-radius:6px;margin-bottom:10px}
+
+  /* listes clients / catalogue / historique */
+  .list-item{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 16px;background:var(--surface-2);border:1px solid var(--line-soft);
+    border-radius:var(--radius-sm);margin-bottom:10px}
+  .list-item .meta{min-width:0}
+  .list-item .meta b{display:block;font-size:15px;margin-bottom:2px;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap}
+  .list-item .meta small{color:var(--text-faint);font-size:12.5px}
+  .list-item .ops{display:flex;gap:6px;flex-shrink:0}
+  .empty{text-align:center;padding:40px 20px;color:var(--text-faint)}
+  .empty .big{font-size:38px;margin-bottom:12px;opacity:.5}
+  .empty p{margin-bottom:16px;font-size:14.5px}
+
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;
+    background:var(--accent-soft);color:var(--accent);letter-spacing:.3px}
+  .badge.due{background:rgba(239,68,68,.12);color:var(--danger)}
+  .badge.grey{background:var(--surface-2);color:var(--text-dim)}
+
+  /* toast */
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:var(--surface-2);border:1px solid var(--line);color:var(--text);
+    padding:13px 22px;border-radius:10px;font-size:14px;font-weight:600;z-index:100;
+    box-shadow:0 12px 40px rgba(0,0,0,.5);transition:transform .3s cubic-bezier(.2,.8,.2,1);
+    display:flex;align-items:center;gap:9px}
+  #toast.show{transform:translateX(-50%) translateY(0)}
+  #toast .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+
+  .save-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding-top:6px;border-top:1px solid var(--line-soft);margin-top:4px}
+  .picker{display:flex;gap:10px;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap}
+  .picker .field{flex:1;min-width:180px;margin-bottom:0}
+  select.pick{cursor:pointer}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">F</div>
+      <b>Générateur de facture</b>
+      <span>· outilsweb-pro</span>
+      <button id="theme-toggle" type="button" title="Changer de thème"
+        style="margin-left:auto;background:var(--surface-2);border:1px solid var(--line);
+        color:var(--text-dim);width:38px;height:38px;border-radius:9px;cursor:pointer;
+        font-size:17px;display:grid;place-items:center;flex-shrink:0">🌙</button>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="invoice">Nouvelle facture</button>
+      <button class="tab" data-tab="company">Mon entreprise</button>
+      <button class="tab" data-tab="clients">Clients</button>
+      <button class="tab" data-tab="catalog">Prestations</button>
+      <button class="tab" data-tab="history">Historique</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ FACTURE ============ -->
+  <section class="panel active" id="panel-invoice">
+
+    <div class="card">
+      <h2><span class="step">1</span> Émetteur</h2>
+      <div id="issuer-summary"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="step">2</span> Client</h2>
+      <div class="picker">
+        <div class="field">
+          <label>Choisir un client enregistré</label>
+          <select class="pick" id="client-pick"><option value="">— Nouveau client —</option></select>
+        </div>
+        <button class="btn ghost sm" id="save-client-btn" type="button">Enregistrer ce client</button>
+      </div>
+      <div class="field"><label>Nom du client</label><input id="cl-name" placeholder="Entreprise ou personne"></div>
+      <div class="grid2">
+        <div class="field"><label>Email</label><input id="cl-email" placeholder="client@email.com"></div>
+        <div class="field"><label>Téléphone</label><input id="cl-phone" placeholder="+230 ..."></div>
+      </div>
+      <div class="field"><label>Adresse</label><textarea id="cl-address" placeholder="Adresse complète"></textarea></div>
+      <div class="field"><label>Identifiant fiscal du client (facultatif)</label><input id="cl-tax" placeholder="N° TVA / BRN / RCCM..."></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="step">3</span> Détails de la facture</h2>
+      <div class="grid3">
+        <div class="field">
+          <label>Numéro de facture</label>
+          <input id="inv-number" placeholder="2026-0001">
+          <div class="hint">Attribué automatiquement à l'émission, en continu.</div>
+        </div>
+        <div class="field"><label>Date d'émission</label><input type="date" id="inv-date"></div>
+        <div class="field"><label>Date d'échéance</label><input type="date" id="inv-due"></div>
+      </div>
+      <div class="grid3">
+        <div class="field">
+          <label>Devise</label>
+          <select id="inv-currency"></select>
+        </div>
+        <div class="field">
+          <label>Taux de TVA (%)</label>
+          <input type="number" id="inv-vat" value="0" min="0" step="0.1">
+          <div class="hint">Mettez 0 si non assujetti.</div>
+        </div>
+        <div class="field">
+          <label>Remise (%)</label>
+          <input type="number" id="inv-discount" value="0" min="0" step="0.1">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="step">4</span> Prestations</h2>
+      <div class="picker">
+        <div class="field">
+          <label>Ajouter depuis le catalogue</label>
+          <select class="pick" id="catalog-pick"><option value="">— Choisir une prestation —</option></select>
+        </div>
+      </div>
+      <table class="lines">
+        <thead><tr>
+          <th class="col-desc">Description</th>
+          <th class="col-qty">Qté</th>
+          <th class="col-price">Prix unitaire</th>
+          <th class="col-total" style="text-align:right">Total</th>
+          <th class="col-x"></th>
+        </tr></thead>
+        <tbody id="lines-body"></tbody>
+      </table>
+      <div class="actions">
+        <button class="btn ghost sm" id="add-line" type="button">+ Ajouter une ligne</button>
+        <button class="inline-link" id="save-catalog-btn" type="button" style="margin-left:auto">Enregistrer une ligne au catalogue</button>
+      </div>
+
+      <div class="totals">
+        <div class="row"><span>Sous-total</span><span id="t-subtotal">0,00</span></div>
+        <div class="row" id="t-discount-row" style="display:none"><span>Remise</span><span id="t-discount">0,00</span></div>
+        <div class="row" id="t-vat-row"><span>TVA</span><span id="t-vat">0,00</span></div>
+        <div class="row grand"><span>Total</span><span id="t-total">0,00</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="step">5</span> Notes & mentions</h2>
+      <div class="field"><textarea id="inv-notes" placeholder="Conditions de paiement, coordonnées bancaires, mentions légales..."></textarea></div>
+      <div class="actions">
+        <button class="btn" id="emit-btn" type="button">✓ Émettre et télécharger le PDF</button>
+        <button class="btn ghost" id="preview-btn" type="button">Aperçu PDF (sans numéroter)</button>
+        <button class="btn ghost" id="reset-btn" type="button">Vider le formulaire</button>
+      </div>
+      <div class="hint" style="margin-top:12px">« Émettre » attribue le numéro suivant, enregistre la facture dans l'historique, puis télécharge le PDF. « Aperçu » génère un PDF de test sans consommer de numéro.</div>
+    </div>
+  </section>
+
+  <!-- ============ ENTREPRISE ============ -->
+  <section class="panel" id="panel-company">
+    <div class="card">
+      <h2>Profil de l'entreprise</h2>
+      <p class="hint" style="margin-top:-8px;margin-bottom:18px">Enregistré une fois, réutilisé sur chaque facture. Rien n'est envoyé : tout reste dans votre navigateur.</p>
+
+      <div class="field">
+        <label>Logo</label>
+        <div class="logo-drop" id="logo-drop">
+          <img id="logo-preview" class="logo-preview" style="display:none">
+          <div id="logo-placeholder">Cliquez pour ajouter votre logo (PNG ou JPG)</div>
+        </div>
+        <input type="file" id="logo-input" accept="image/png,image/jpeg" style="display:none">
+        <button class="inline-link" id="logo-remove" type="button" style="display:none;margin-top:8px">Retirer le logo</button>
+      </div>
+
+      <div class="field"><label>Nom de l'entreprise</label><input id="co-name" placeholder="Votre raison sociale"></div>
+      <div class="grid2">
+        <div class="field"><label>Email</label><input id="co-email" placeholder="contact@..."></div>
+        <div class="field"><label>Téléphone</label><input id="co-phone" placeholder="+230 ..."></div>
+      </div>
+      <div class="field"><label>Adresse</label><textarea id="co-address" placeholder="Adresse complète"></textarea></div>
+      <div class="grid2">
+        <div class="field"><label>Identifiant d'entreprise</label><input id="co-reg" placeholder="BRN / SIRET / RCCM..."></div>
+        <div class="field"><label>Numéro de TVA</label><input id="co-vat" placeholder="N° TVA / VAT"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Devise par défaut</label><select id="co-currency"></select></div>
+        <div class="field"><label>TVA par défaut (%)</label><input type="number" id="co-vatrate" value="0" min="0" step="0.1"></div>
+        <div class="field"><label>Coordonnées bancaires (IBAN...)</label><input id="co-bank" placeholder="Facultatif"></div>
+      </div>
+      <div class="field"><label>Mentions légales de pied de page</label><textarea id="co-legal" placeholder="Ex. mentions obligatoires, conditions de paiement par défaut..."></textarea></div>
+
+      <div class="save-bar">
+        <button class="btn" id="save-company" type="button">Enregistrer mon entreprise</button>
+        <span class="hint" id="co-saved-at"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Format de numérotation</h2>
+      <div class="grid3">
+        <div class="field">
+          <label>Préfixe</label>
+          <input id="num-prefix" placeholder="2026-">
+          <div class="hint">Ex. « 2026- » ou « FAC-2026-05- »</div>
+        </div>
+        <div class="field">
+          <label>Prochain numéro</label>
+          <input type="number" id="num-next" min="1" value="1">
+        </div>
+        <div class="field">
+          <label>Chiffres (remplissage)</label>
+          <input type="number" id="num-pad" min="1" max="8" value="4">
+          <div class="hint">4 → 0001</div>
+        </div>
+      </div>
+      <div class="hint" id="num-example" style="margin-bottom:14px"></div>
+      <button class="btn ghost sm" id="save-numbering" type="button">Enregistrer le format</button>
+    </div>
+  </section>
+
+  <!-- ============ CLIENTS ============ -->
+  <section class="panel" id="panel-clients">
+    <div class="card">
+      <h2>Répertoire clients</h2>
+      <p class="hint" style="margin-top:-8px;margin-bottom:16px">Vos clients enregistrés apparaissent dans la liste déroulante de l'onglet « Nouvelle facture ».</p>
+      <div id="clients-list"></div>
+    </div>
+  </section>
+
+  <!-- ============ CATALOGUE ============ -->
+  <section class="panel" id="panel-catalog">
+    <div class="card">
+      <h2>Catalogue de prestations</h2>
+      <p class="hint" style="margin-top:-8px;margin-bottom:16px">Vos prestations et produits récurrents, insérables en un clic dans une facture.</p>
+      <div class="picker" style="align-items:flex-end">
+        <div class="field" style="flex:2"><label>Description</label><input id="cat-desc" placeholder="Ex. Prestation de conseil (journée)"></div>
+        <div class="field"><label>Prix unitaire</label><input type="number" id="cat-price" placeholder="0" step="0.01"></div>
+        <button class="btn sm" id="cat-add" type="button">Ajouter</button>
+      </div>
+      <div id="catalog-list" style="margin-top:8px"></div>
+    </div>
+  </section>
+
+  <!-- ============ HISTORIQUE ============ -->
+  <section class="panel" id="panel-history">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+        <h2 style="margin:0">Factures émises</h2>
+        <button class="btn ghost sm" id="export-all-csv" type="button">⭳ Exporter tout en CSV</button>
+      </div>
+      <p class="hint" style="margin-top:-8px;margin-bottom:16px">Le fichier CSV s'ouvre dans Excel ou Google Sheets. Idéal pour votre comptable ou votre suivi mensuel.</p>
+      <div id="history-list"></div>
+    </div>
+  </section>
+
+</main>
+
+<div id="toast"><span class="dot"></span><span id="toast-msg"></span></div>
+
+<script>
+/* ============================================================
+   Générateur de facture — stockage local (localStorage)
+   Aucune donnée ne quitte le navigateur.
+   ============================================================ */
+const K = {company:'owp_company', clients:'owp_clients', catalog:'owp_catalog',
+           numbering:'owp_numbering', history:'owp_history'};
+
+const CURRENCIES = [
+  ['EUR','€'],['USD','$'],['GBP','£'],['CHF','CHF'],['CAD','$CA'],
+  ['MUR','Rs'],['MGA','Ar'],['XOF','FCFA'],['XAF','FCFA'],['MAD','DH'],
+  ['TND','DT'],['DZD','DA'],['NGN','₦'],['GHS','₵'],['KES','KSh'],
+  ['ZAR','R'],['SCR','₨'],['KMF','FC'],['DJF','Fdj'],['GNF','FG'],
+  ['CDF','FC'],['RWF','FRw'],['BIF','FBu'],['SLL','Le'],['LRD','$L'],
+  ['EGP','£E'],['SAR','﷼'],['AED','د.إ'],['QAR','﷼'],['LBP','ل.ل'],
+  ['INR','₹'],['CNY','¥'],['JPY','¥'],['AUD','$AU'],['BRL','R$'],
+  ['MXN','$'],['SEK','kr'],['NOK','kr'],['DKK','kr'],['PLN','zł']
+];
+
+const $ = id => document.getElementById(id);
+const load = k => { try{ return JSON.parse(localStorage.getItem(k)) }catch(e){ return null } };
+const save = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+
+function toast(msg){
+  $('toast-msg').textContent = msg;
+  $('toast').classList.add('show');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(()=>$('toast').classList.remove('show'), 2600);
+}
+
+function fmt(n, cur){
+  const sym = (CURRENCIES.find(c=>c[0]===cur)||['',''])[1];
+  const v = (Number(n)||0).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return sym ? `${v} ${sym}` : v;
+}
+
+/* ---------- onglets ---------- */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    $('panel-'+t.dataset.tab).classList.add('active');
+    if(t.dataset.tab==='clients') renderClients();
+    if(t.dataset.tab==='catalog') renderCatalog();
+    if(t.dataset.tab==='history') renderHistory();
+    if(t.dataset.tab==='invoice') refreshIssuer();
+  });
+});
+
+/* ---------- devises ---------- */
+function fillCurrencies(sel, selected){
+  sel.innerHTML='';
+  CURRENCIES.forEach(([code,sym])=>{
+    const o=document.createElement('option');
+    o.value=code; o.textContent=`${code} (${sym})`;
+    if(code===selected) o.selected=true;
+    sel.appendChild(o);
+  });
+}
+fillCurrencies($('inv-currency'),'EUR');
+fillCurrencies($('co-currency'),'EUR');
+
+/* ============================================================
+   ENTREPRISE
+   ============================================================ */
+function loadCompanyForm(){
+  const c = load(K.company); if(!c) return;
+  $('co-name').value=c.name||''; $('co-email').value=c.email||'';
+  $('co-phone').value=c.phone||''; $('co-address').value=c.address||'';
+  $('co-reg').value=c.reg||''; $('co-vat').value=c.vat||'';
+  $('co-vatrate').value=c.vatrate??0; $('co-bank').value=c.bank||'';
+  $('co-legal').value=c.legal||'';
+  fillCurrencies($('co-currency'), c.currency||'EUR');
+  if(c.logo){
+    $('logo-preview').src=c.logo; $('logo-preview').style.display='block';
+    $('logo-placeholder').style.display='none'; $('logo-remove').style.display='inline';
+  }
+}
+let logoData = null;
+$('logo-drop').addEventListener('click',()=>$('logo-input').click());
+$('logo-input').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    logoData=ev.target.result;
+    $('logo-preview').src=logoData; $('logo-preview').style.display='block';
+    $('logo-placeholder').style.display='none'; $('logo-remove').style.display='inline';
+  };
+  r.readAsDataURL(f);
+});
+$('logo-remove').addEventListener('click',()=>{
+  logoData=null; $('logo-preview').style.display='none';
+  $('logo-placeholder').style.display='block'; $('logo-remove').style.display='none';
+  $('logo-input').value='';
+});
+$('save-company').addEventListener('click',()=>{
+  const existing = load(K.company)||{};
+  const c={
+    name:$('co-name').value.trim(), email:$('co-email').value.trim(),
+    phone:$('co-phone').value.trim(), address:$('co-address').value.trim(),
+    reg:$('co-reg').value.trim(), vat:$('co-vat').value.trim(),
+    vatrate:parseFloat($('co-vatrate').value)||0, bank:$('co-bank').value.trim(),
+    legal:$('co-legal').value.trim(), currency:$('co-currency').value,
+    logo: logoData!==null ? logoData : (existing.logo||null)
+  };
+  save(K.company,c);
+  $('co-saved-at').textContent='Enregistré ✓';
+  setTimeout(()=>$('co-saved-at').textContent='',2500);
+  toast('Entreprise enregistrée');
+  refreshIssuer();
+});
+
+function refreshIssuer(){
+  const c=load(K.company);
+  const box=$('issuer-summary');
+  if(!c||!c.name){
+    box.innerHTML=`<div class="empty" style="padding:24px">
+      <p>Aucune entreprise enregistrée.</p>
+      <button class="btn sm" onclick="document.querySelector('[data-tab=company]').click()">Compléter mon entreprise</button>
+    </div>`;
+    return;
+  }
+  box.innerHTML=`<div class="list-item" style="margin:0">
+    <div class="meta">
+      <b>${esc(c.name)}</b>
+      <small>${[c.email,c.phone,c.reg&&('N° '+c.reg)].filter(Boolean).join(' · ')||'—'}</small>
+    </div>
+    <button class="btn ghost sm" onclick="document.querySelector('[data-tab=company]').click()">Modifier</button>
+  </div>`;
+  // pré-remplir devise/TVA facture si vierge
+  if(!$('inv-number').dataset.touched){
+    fillCurrencies($('inv-currency'), c.currency||'EUR');
+    if($('inv-vat').value==='0' && c.vatrate) $('inv-vat').value=c.vatrate;
+  }
+}
+function esc(s){return (s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+
+/* ---------- numérotation ---------- */
+function loadNumbering(){
+  const n=load(K.numbering)||{prefix:new Date().getFullYear()+'-',next:1,pad:4};
+  $('num-prefix').value=n.prefix; $('num-next').value=n.next; $('num-pad').value=n.pad;
+  updateNumExample();
+  return n;
+}
+function buildNumber(n){
+  return n.prefix + String(n.next).padStart(n.pad,'0');
+}
+function updateNumExample(){
+  const n={prefix:$('num-prefix').value,next:parseInt($('num-next').value)||1,pad:parseInt($('num-pad').value)||4};
+  $('num-example').textContent='Prochaine facture : '+buildNumber(n);
+}
+['num-prefix','num-next','num-pad'].forEach(id=>$(id).addEventListener('input',updateNumExample));
+$('save-numbering').addEventListener('click',()=>{
+  const n={prefix:$('num-prefix').value,next:parseInt($('num-next').value)||1,pad:parseInt($('num-pad').value)||4};
+  save(K.numbering,n); toast('Format de numérotation enregistré'); prefillNumber();
+});
+function prefillNumber(){
+  const n=load(K.numbering)||{prefix:new Date().getFullYear()+'-',next:1,pad:4};
+  if(!$('inv-number').dataset.touched) $('inv-number').value=buildNumber(n);
+}
+$('inv-number').addEventListener('input',()=>{$('inv-number').dataset.touched='1'});
+
+/* ============================================================
+   CLIENTS
+   ============================================================ */
+function getClients(){return load(K.clients)||[]}
+function fillClientPicker(){
+  const sel=$('client-pick'); const cur=sel.value;
+  sel.innerHTML='<option value="">— Nouveau client —</option>';
+  getClients().forEach(c=>{
+    const o=document.createElement('option'); o.value=c.id; o.textContent=c.name; sel.appendChild(o);
+  });
+  sel.value=cur;
+}
+$('client-pick').addEventListener('change',e=>{
+  const c=getClients().find(x=>x.id===e.target.value);
+  if(!c){['cl-name','cl-email','cl-phone','cl-address','cl-tax'].forEach(i=>$(i).value='');return}
+  $('cl-name').value=c.name||''; $('cl-email').value=c.email||'';
+  $('cl-phone').value=c.phone||''; $('cl-address').value=c.address||''; $('cl-tax').value=c.tax||'';
+});
+$('save-client-btn').addEventListener('click',()=>{
+  const name=$('cl-name').value.trim();
+  if(!name){toast('Renseignez le nom du client');return}
+  const list=getClients();
+  const sel=$('client-pick').value;
+  const data={name,email:$('cl-email').value.trim(),phone:$('cl-phone').value.trim(),
+              address:$('cl-address').value.trim(),tax:$('cl-tax').value.trim()};
+  const existing=list.find(x=>x.id===sel);
+  if(existing){Object.assign(existing,data);toast('Client mis à jour')}
+  else{data.id=uid();list.push(data);$('client-pick').value=data.id;toast('Client enregistré')}
+  save(K.clients,list); fillClientPicker();
+  if(!existing) $('client-pick').value=data.id;
+});
+function renderClients(){
+  const list=getClients(); const box=$('clients-list');
+  if(!list.length){box.innerHTML=`<div class="empty"><div class="big">👤</div><p>Aucun client enregistré pour l'instant.</p><p class="hint">Ajoutez-les depuis l'onglet « Nouvelle facture » en cliquant sur « Enregistrer ce client ».</p></div>`;return}
+  box.innerHTML=list.map(c=>`<div class="list-item">
+    <div class="meta"><b>${esc(c.name)}</b><small>${[c.email,c.phone].filter(Boolean).join(' · ')||'—'}</small></div>
+    <div class="ops">
+      <button class="btn ghost sm" onclick="useClient('${c.id}')">Facturer</button>
+      <button class="btn danger sm" onclick="delClient('${c.id}')">Supprimer</button>
+    </div>
+  </div>`).join('');
+}
+window.useClient=id=>{
+  document.querySelector('[data-tab=invoice]').click();
+  $('client-pick').value=id; $('client-pick').dispatchEvent(new Event('change'));
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+window.delClient=id=>{
+  if(!confirm('Supprimer ce client ?'))return;
+  save(K.clients,getClients().filter(x=>x.id!==id));
+  renderClients(); fillClientPicker(); toast('Client supprimé');
+};
+
+/* ============================================================
+   CATALOGUE
+   ============================================================ */
+function getCatalog(){return load(K.catalog)||[]}
+function fillCatalogPicker(){
+  const sel=$('catalog-pick');
+  sel.innerHTML='<option value="">— Choisir une prestation —</option>';
+  getCatalog().forEach(c=>{
+    const o=document.createElement('option'); o.value=c.id;
+    o.textContent=`${c.desc} — ${fmt(c.price,$('inv-currency').value)}`; sel.appendChild(o);
+  });
+}
+$('catalog-pick').addEventListener('change',e=>{
+  const c=getCatalog().find(x=>x.id===e.target.value);
+  if(c){addLine(c.desc,1,c.price); recalc(); e.target.value=''}
+});
+$('cat-add').addEventListener('click',()=>{
+  const desc=$('cat-desc').value.trim(); const price=parseFloat($('cat-price').value)||0;
+  if(!desc){toast('Renseignez la description');return}
+  const list=getCatalog(); list.push({id:uid(),desc,price}); save(K.catalog,list);
+  $('cat-desc').value=''; $('cat-price').value='';
+  renderCatalog(); fillCatalogPicker(); toast('Prestation ajoutée au catalogue');
+});
+$('save-catalog-btn').addEventListener('click',()=>{
+  const rows=[...document.querySelectorAll('.line-row')];
+  const last=rows[rows.length-1]; if(!last){toast('Ajoutez d\'abord une ligne');return}
+  const desc=last.querySelector('.l-desc').value.trim();
+  const price=parseFloat(last.querySelector('.l-price').value)||0;
+  if(!desc){toast('La dernière ligne n\'a pas de description');return}
+  const list=getCatalog(); list.push({id:uid(),desc,price}); save(K.catalog,list);
+  renderCatalog(); fillCatalogPicker(); toast('Ligne enregistrée au catalogue');
+});
+function renderCatalog(){
+  const list=getCatalog(); const box=$('catalog-list');
+  if(!list.length){box.innerHTML=`<div class="empty"><div class="big">📦</div><p>Catalogue vide.</p></div>`;return}
+  box.innerHTML=list.map(c=>`<div class="list-item">
+    <div class="meta"><b>${esc(c.desc)}</b><small>${fmt(c.price,$('inv-currency').value)}</small></div>
+    <div class="ops">
+      <button class="btn ghost sm" onclick="insertCat('${c.id}')">Insérer</button>
+      <button class="btn danger sm" onclick="delCat('${c.id}')">Supprimer</button>
+    </div>
+  </div>`).join('');
+}
+window.insertCat=id=>{
+  const c=getCatalog().find(x=>x.id===id); if(!c)return;
+  document.querySelector('[data-tab=invoice]').click();
+  addLine(c.desc,1,c.price); recalc(); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+};
+window.delCat=id=>{
+  if(!confirm('Supprimer cette prestation ?'))return;
+  save(K.catalog,getCatalog().filter(x=>x.id!==id));
+  renderCatalog(); fillCatalogPicker(); toast('Prestation supprimée');
+};
+
+/* ============================================================
+   LIGNES DE FACTURE
+   ============================================================ */
+function addLine(desc='',qty=1,price=''){
+  const tr=document.createElement('tr'); tr.className='line-row';
+  tr.innerHTML=`
+    <td class="col-desc"><input class="l-desc" placeholder="Description" value="${esc(desc)}"></td>
+    <td class="col-qty"><input class="l-qty" type="number" min="0" step="1" value="${qty}"></td>
+    <td class="col-price"><input class="l-price" type="number" min="0" step="0.01" value="${price}" placeholder="0"></td>
+    <td class="col-total"><div class="line-total">0,00</div></td>
+    <td class="col-x"><button class="rm" title="Supprimer">×</button></td>`;
+  $('lines-body').appendChild(tr);
+  tr.querySelectorAll('input').forEach(i=>i.addEventListener('input',recalc));
+  tr.querySelector('.rm').addEventListener('click',()=>{tr.remove();recalc()});
+}
+$('add-line').addEventListener('click',()=>addLine());
+
+function recalc(){
+  const cur=$('inv-currency').value;
+  let sub=0;
+  document.querySelectorAll('.line-row').forEach(r=>{
+    const q=parseFloat(r.querySelector('.l-qty').value)||0;
+    const p=parseFloat(r.querySelector('.l-price').value)||0;
+    const t=q*p; sub+=t;
+    r.querySelector('.line-total').textContent=fmt(t,cur);
+  });
+  const disc=(parseFloat($('inv-discount').value)||0)/100*sub;
+  const base=sub-disc;
+  const vat=(parseFloat($('inv-vat').value)||0)/100*base;
+  const total=base+vat;
+  $('t-subtotal').textContent=fmt(sub,cur);
+  $('t-discount').textContent='– '+fmt(disc,cur);
+  $('t-discount-row').style.display=disc>0?'flex':'none';
+  $('t-vat').textContent=fmt(vat,cur);
+  $('t-total').textContent=fmt(total,cur);
+  return {sub,disc,vat,total,cur};
+}
+['inv-vat','inv-discount','inv-currency'].forEach(id=>$(id).addEventListener('input',()=>{recalc();fillCatalogPicker();renderCatalog()}));
+
+/* ============================================================
+   COLLECTE + PDF
+   ============================================================ */
+function collect(){
+  const lines=[...document.querySelectorAll('.line-row')].map(r=>({
+    desc:r.querySelector('.l-desc').value.trim(),
+    qty:parseFloat(r.querySelector('.l-qty').value)||0,
+    price:parseFloat(r.querySelector('.l-price').value)||0
+  })).filter(l=>l.desc||l.price);
+  return {
+    company:load(K.company)||{},
+    client:{name:$('cl-name').value.trim(),email:$('cl-email').value.trim(),
+            phone:$('cl-phone').value.trim(),address:$('cl-address').value.trim(),tax:$('cl-tax').value.trim()},
+    number:$('inv-number').value.trim(), date:$('inv-date').value, due:$('inv-due').value,
+    currency:$('inv-currency').value, vatRate:parseFloat($('inv-vat').value)||0,
+    discountRate:parseFloat($('inv-discount').value)||0,
+    notes:$('inv-notes').value.trim(), lines,
+    totals:recalc()
+  };
+}
+
+function generatePDF(data){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210, M=18; let y=20;
+  const cur=data.currency;
+  const green=[34,197,94], dark=[30,41,59], grey=[100,116,139];
+
+  // logo
+  if(data.company.logo){
+    try{
+      const prop=doc.getImageProperties(data.company.logo);
+      const h=22, w=prop.width/prop.height*h;
+      doc.addImage(data.company.logo,'PNG',M,y,Math.min(w,55),h);
+    }catch(e){}
+  }
+  // titre FACTURE
+  doc.setFont('helvetica','bold'); doc.setFontSize(26); doc.setTextColor(...dark);
+  doc.text('FACTURE',W-M,y+8,{align:'right'});
+  doc.setFontSize(11); doc.setTextColor(...grey); doc.setFont('helvetica','normal');
+  doc.text('N° '+(data.number||'—'),W-M,y+16,{align:'right'});
+  y+=32;
+
+  // émetteur
+  doc.setFontSize(10); doc.setTextColor(...dark); doc.setFont('helvetica','bold');
+  doc.text(data.company.name||'Votre entreprise',M,y);
+  doc.setFont('helvetica','normal'); doc.setTextColor(...grey); doc.setFontSize(9);
+  let cy=y+5;
+  [data.company.address, data.company.email, data.company.phone,
+   data.company.reg&&('N° '+data.company.reg), data.company.vat&&('TVA '+data.company.vat)]
+   .filter(Boolean).forEach(line=>{
+     String(line).split('\n').forEach(t=>{doc.text(t,M,cy);cy+=4.5});
+   });
+
+  // client (droite)
+  doc.setTextColor(...grey); doc.setFontSize(8); doc.text('FACTURÉ À',W-M,y-4,{align:'right'});
+  doc.setTextColor(...dark); doc.setFont('helvetica','bold'); doc.setFontSize(10);
+  doc.text(data.client.name||'—',W-M,y,{align:'right'});
+  doc.setFont('helvetica','normal'); doc.setTextColor(...grey); doc.setFontSize(9);
+  let ry=y+5;
+  [data.client.address,data.client.email,data.client.phone,data.client.tax]
+   .filter(Boolean).forEach(line=>{
+     String(line).split('\n').forEach(t=>{doc.text(t,W-M,ry,{align:'right'});ry+=4.5});
+   });
+
+  y=Math.max(cy,ry)+8;
+
+  // dates
+  doc.setDrawColor(230,232,236); doc.line(M,y,W-M,y); y+=6;
+  doc.setFontSize(9); doc.setTextColor(...grey);
+  const dfr=s=>s?new Date(s).toLocaleDateString('fr-FR'):'—';
+  doc.text('Date d\'émission : '+dfr(data.date),M,y);
+  if(data.due) doc.text('Échéance : '+dfr(data.due),W-M,y,{align:'right'});
+  y+=8;
+
+  // en-tête tableau
+  doc.setFillColor(...dark); doc.rect(M,y,W-2*M,8,'F');
+  doc.setTextColor(255,255,255); doc.setFontSize(8.5); doc.setFont('helvetica','bold');
+  doc.text('DESCRIPTION',M+3,y+5.3);
+  doc.text('QTÉ',W-M-62,y+5.3,{align:'right'});
+  doc.text('PRIX U.',W-M-33,y+5.3,{align:'right'});
+  doc.text('TOTAL',W-M-3,y+5.3,{align:'right'});
+  y+=8;
+
+  // lignes
+  doc.setFont('helvetica','normal'); doc.setTextColor(...dark);
+  data.lines.forEach((l,i)=>{
+    if(y>262){doc.addPage();y=20}
+    const t=l.qty*l.price;
+    if(i%2===0){doc.setFillColor(247,248,250);doc.rect(M,y,W-2*M,8,'F')}
+    doc.setFontSize(9); doc.setTextColor(...dark);
+    const desc=doc.splitTextToSize(l.desc||'—',W-2*M-72);
+    doc.text(desc[0],M+3,y+5.3);
+    doc.setTextColor(...grey);
+    doc.text(String(l.qty),W-M-62,y+5.3,{align:'right'});
+    doc.text(fmt(l.price,cur),W-M-33,y+5.3,{align:'right'});
+    doc.setTextColor(...dark);
+    doc.text(fmt(t,cur),W-M-3,y+5.3,{align:'right'});
+    y+=8;
+  });
+
+  // totaux
+  y+=4; const tx=W-M-3, lx=W-M-60;
+  doc.setFontSize(9.5); doc.setTextColor(...grey);
+  doc.text('Sous-total',lx,y); doc.setTextColor(...dark);
+  doc.text(fmt(data.totals.sub,cur),tx,y,{align:'right'}); y+=6;
+  if(data.totals.disc>0){
+    doc.setTextColor(...grey); doc.text('Remise ('+data.discountRate+'%)',lx,y);
+    doc.setTextColor(...dark); doc.text('– '+fmt(data.totals.disc,cur),tx,y,{align:'right'}); y+=6;
+  }
+  doc.setTextColor(...grey); doc.text('TVA ('+data.vatRate+'%)',lx,y);
+  doc.setTextColor(...dark); doc.text(fmt(data.totals.vat,cur),tx,y,{align:'right'}); y+=4;
+  doc.setDrawColor(...dark); doc.line(lx,y,tx,y); y+=6;
+  doc.setFont('helvetica','bold'); doc.setFontSize(12);
+  doc.text('TOTAL',lx,y); doc.setTextColor(...green);
+  doc.text(fmt(data.totals.total,cur),tx,y,{align:'right'});
+  y+=12;
+
+  // notes + mentions
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...grey);
+  const foot=[data.notes, data.company.bank&&('Règlement : '+data.company.bank), data.company.legal]
+             .filter(Boolean).join('\n');
+  if(foot){
+    if(y>250){doc.addPage();y=20}
+    doc.setDrawColor(230,232,236); doc.line(M,y,W-M,y); y+=6;
+    doc.splitTextToSize(foot,W-2*M).forEach(t=>{
+      if(y>285){doc.addPage();y=20}
+      doc.text(t,M,y); y+=4.5;
+    });
+  }
+  return doc;
+}
+
+/* ---------- aperçu (sans numéroter) ---------- */
+$('preview-btn').addEventListener('click',()=>{
+  const data=collect();
+  if(!data.lines.length){toast('Ajoutez au moins une ligne');return}
+  if(!data.number) data.number='(aperçu)';
+  generatePDF(data).save('apercu-facture.pdf');
+});
+
+/* ---------- émettre (numérote + historique) ---------- */
+$('emit-btn').addEventListener('click',()=>{
+  const data=collect();
+  if(!data.client.name){toast('Renseignez le nom du client');return}
+  if(!data.lines.length){toast('Ajoutez au moins une ligne');return}
+
+  // numéro : si l'utilisateur n'a pas forcé, on prend le compteur
+  const n=load(K.numbering)||{prefix:new Date().getFullYear()+'-',next:1,pad:4};
+  if(!$('inv-number').dataset.touched || !data.number){
+    data.number=buildNumber(n);
+  }
+  // incrémenter et enregistrer le compteur
+  n.next=(parseInt(n.next)||1)+1; save(K.numbering,n);
+
+  // historique
+  const hist=load(K.history)||[];
+  hist.unshift({id:uid(), number:data.number, clientName:data.client.name,
+                date:data.date, total:data.totals.total, currency:data.currency, snapshot:data});
+  save(K.history,hist);
+
+  generatePDF(data).save('facture-'+(data.number||'').replace(/[^\w-]/g,'')+'.pdf');
+  toast('Facture '+data.number+' émise ✓');
+
+  // préparer la suivante
+  $('inv-number').dataset.touched=''; prefillNumber(); loadNumbering();
+});
+
+/* ---------- reset ---------- */
+$('reset-btn').addEventListener('click',()=>{
+  if(!confirm('Vider le formulaire ? (vos données enregistrées sont conservées)'))return;
+  ['cl-name','cl-email','cl-phone','cl-address','cl-tax','inv-notes'].forEach(i=>$(i).value='');
+  $('client-pick').value=''; $('lines-body').innerHTML=''; addLine();
+  $('inv-number').dataset.touched=''; prefillNumber(); recalc();
+});
+
+/* ============================================================
+   HISTORIQUE
+   ============================================================ */
+function renderHistory(){
+  const list=load(K.history)||[]; const box=$('history-list');
+  if(!list.length){box.innerHTML=`<div class="empty"><div class="big">🧾</div><p>Aucune facture émise pour l'instant.</p><p class="hint">Les factures que vous émettez apparaîtront ici, retéléchargeables à tout moment.</p></div>`;return}
+  box.innerHTML=list.map(h=>`<div class="list-item">
+    <div class="meta">
+      <b>${esc(h.number)} · ${esc(h.clientName)}</b>
+      <small>${h.date?new Date(h.date).toLocaleDateString('fr-FR'):'—'} · ${fmt(h.total,h.currency)}</small>
+    </div>
+    <div class="ops">
+      <button class="btn ghost sm" onclick="redownload('${h.id}')">PDF</button>
+      <button class="btn ghost sm" onclick="exportInvoiceCSV('${h.id}')">CSV</button>
+      <button class="btn ghost sm" onclick="duplicate('${h.id}')">Dupliquer</button>
+      <button class="btn danger sm" onclick="delHist('${h.id}')">×</button>
+    </div>
+  </div>`).join('');
+}
+window.redownload=id=>{
+  const h=(load(K.history)||[]).find(x=>x.id===id); if(!h)return;
+  generatePDF(h.snapshot).save('facture-'+(h.number||'').replace(/[^\w-]/g,'')+'.pdf');
+};
+window.duplicate=id=>{
+  const h=(load(K.history)||[]).find(x=>x.id===id); if(!h)return;
+  const s=h.snapshot;
+  document.querySelector('[data-tab=invoice]').click();
+  $('cl-name').value=s.client.name||''; $('cl-email').value=s.client.email||'';
+  $('cl-phone').value=s.client.phone||''; $('cl-address').value=s.client.address||'';
+  $('cl-tax').value=s.client.tax||'';
+  fillCurrencies($('inv-currency'),s.currency); $('inv-vat').value=s.vatRate;
+  $('inv-discount').value=s.discountRate||0; $('inv-notes').value=s.notes||'';
+  $('lines-body').innerHTML=''; s.lines.forEach(l=>addLine(l.desc,l.qty,l.price));
+  $('inv-number').dataset.touched=''; prefillNumber(); recalc();
+  window.scrollTo({top:0,behavior:'smooth'}); toast('Facture dupliquée — nouveau numéro attribué à l\'émission');
+};
+window.delHist=id=>{
+  if(!confirm('Retirer cette facture de l\'historique ? (le numéro déjà consommé n\'est pas réutilisé)'))return;
+  save(K.history,(load(K.history)||[]).filter(x=>x.id!==id));
+  renderHistory(); toast('Facture retirée de l\'historique');
+};
+
+/* ============================================================
+   EXPORT CSV
+   Séparateur « ; » et BOM UTF-8 : compatibles Excel français.
+   ============================================================ */
+function csvCell(v){
+  const s = (v===null||v===undefined) ? '' : String(v);
+  // échapper si le texte contient ; " ou un saut de ligne
+  if(/[";\n\r]/.test(s)) return '"'+s.replace(/"/g,'""')+'"';
+  return s;
+}
+function csvRows(rows){
+  return rows.map(r=>r.map(csvCell).join(';')).join('\r\n');
+}
+function downloadCSV(filename, content){
+  const blob = new Blob(['\uFEFF'+content], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=filename; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+function num2(n){ return (Number(n)||0).toFixed(2).replace('.',','); } // décimale FR
+
+/* ---- 1. Historique complet : une ligne par facture ---- */
+$('export-all-csv').addEventListener('click',()=>{
+  const list = load(K.history)||[];
+  if(!list.length){ toast('Aucune facture à exporter'); return }
+  const rows = [['Numéro','Date','Client','Sous-total','Remise','TVA','Total','Devise']];
+  // ordre chronologique (l'historique est stocké du plus récent au plus ancien)
+  [...list].reverse().forEach(h=>{
+    const t = h.snapshot ? h.snapshot.totals : {sub:h.total,disc:0,vat:0,total:h.total};
+    rows.push([
+      h.number,
+      h.date ? new Date(h.date).toLocaleDateString('fr-FR') : '',
+      h.clientName,
+      num2(t.sub), num2(t.disc), num2(t.vat), num2(t.total),
+      h.currency
+    ]);
+  });
+  downloadCSV('factures-historique.csv', csvRows(rows));
+  toast('Historique exporté ('+list.length+' factures)');
+});
+
+/* ---- 2. Détail d'une facture : une ligne par prestation ---- */
+window.exportInvoiceCSV = id=>{
+  const h = (load(K.history)||[]).find(x=>x.id===id);
+  if(!h || !h.snapshot){ toast('Détail indisponible'); return }
+  const s = h.snapshot;
+  const rows = [];
+  // bloc en-tête
+  rows.push(['Facture', s.number]);
+  rows.push(['Date', s.date ? new Date(s.date).toLocaleDateString('fr-FR') : '']);
+  rows.push(['Client', s.client.name||'']);
+  rows.push(['Devise', s.currency]);
+  rows.push([]); // ligne vide
+  // détail des lignes
+  rows.push(['Description','Quantité','Prix unitaire','Total ligne']);
+  s.lines.forEach(l=>{
+    rows.push([l.desc, l.qty, num2(l.price), num2(l.qty*l.price)]);
+  });
+  rows.push([]);
+  rows.push(['','','Sous-total', num2(s.totals.sub)]);
+  if(s.totals.disc>0) rows.push(['','','Remise', num2(s.totals.disc)]);
+  rows.push(['','','TVA', num2(s.totals.vat)]);
+  rows.push(['','','Total', num2(s.totals.total)]);
+  downloadCSV('facture-'+(s.number||'').replace(/[^\w-]/g,'')+'.csv', csvRows(rows));
+  toast('Facture '+s.number+' exportée en CSV');
+};
+
+/* ============================================================
+   THÈME CLAIR / SOMBRE
+   ============================================================ */
+function applyTheme(mode){
+  if(mode==='light'){
+    document.documentElement.setAttribute('data-theme','light');
+    $('theme-toggle').textContent='☀️';
+  }else{
+    document.documentElement.removeAttribute('data-theme');
+    $('theme-toggle').textContent='🌙';
+  }
+}
+$('theme-toggle').addEventListener('click',()=>{
+  const next = document.documentElement.getAttribute('data-theme')==='light' ? 'dark' : 'light';
+  localStorage.setItem('owp_theme', next);
+  applyTheme(next);
+});
+applyTheme(localStorage.getItem('owp_theme') || 'dark');
+
+/* ============================================================
+   INIT
+   ============================================================ */
+(function init(){
+  loadCompanyForm(); loadNumbering(); prefillNumber();
+  fillClientPicker(); fillCatalogPicker(); refreshIssuer();
+  $('inv-date').value=new Date().toISOString().slice(0,10);
+  addLine(); recalc();
+})();
+</script>
+</body>
+</html>
