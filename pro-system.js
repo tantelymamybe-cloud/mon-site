@@ -12,7 +12,7 @@
 
 const PRO_CONFIG = {
   price: '4,99 $',
-  freeLimitPerDay: 5,                      // valeur par défaut si un outil n'est pas listé ci-dessous
+  freeLimitPerDay: Infinity,                // tous les outils sont gratuits et illimités
   revalidateAfterMs: 6 * 60 * 60 * 1000,    // tente un renouvellement du ticket toutes les 6h
   successParam: 'client_ref',                // paramètre lu au retour de Dodo Payments
 
@@ -58,19 +58,17 @@ const TOOL_LABELS = {
    Un outil absent de cette table retombe sur PRO_CONFIG.freeLimitPerDay.
    ---------------------------------------------------------------------- */
 const FREE_LIMITS = {
-  // A) Coût nul, tout se fait dans le navigateur → gratuit illimité
+  // Tous les outils sont désormais 100 % gratuits et illimités.
   pwd:   Infinity,   // Générateur de mot de passe
   pct:   Infinity,   // Calculateur de pourcentage
   cur:   Infinity,   // Convertisseur de devises
-  qr:    Infinity,   // Générateur QR Code (version standard)
-
-  // B) Traitement lourd / vraie valeur → tier gratuit généreux, puis PRO
-  img:   10,         // Compresseur d'images
-  pdf:   5,          // Convertisseur PDF
-  pdfc:  5,          // Compresseur PDF
-  pdfms: 5,          // Fusion / Découpage PDF
-  inv:   5,          // Générateur de facture
-  trn:   5,          // Traducteur
+  qr:    Infinity,   // Générateur QR Code
+  img:   Infinity,   // Compresseur d'images
+  pdf:   Infinity,   // Convertisseur PDF
+  pdfc:  Infinity,   // Compresseur PDF
+  pdfms: Infinity,   // Fusion / Découpage PDF
+  inv:   Infinity,   // Générateur de facture
+  trn:   Infinity,   // Traducteur
 };
 
 /** Limite gratuite quotidienne d'un outil (Infinity = illimité). */
@@ -243,19 +241,8 @@ async function revalidateLicense() {
 
 /** Redirige vers le checkout Dodo Payments (créé par le Worker) */
 async function goToProCheckout() {
-  const btn = document.querySelector('.pro-cta-btn');
-  const original = btn ? btn.textContent : '';
-  if (btn) { btn.disabled = true; btn.textContent = 'Redirection vers le paiement…'; }
-
-  try {
-    const res = await fetch(PRO_CONFIG.apiBase + '/api/create-checkout', { method: 'POST' });
-    const data = await res.json();
-    if (!data.url) throw new Error('URL manquante');
-    window.location.href = data.url;
-  } catch (e) {
-    alert(_tr('Impossible de contacter le serveur de paiement pour le moment. Réessayez dans un instant.'));
-    if (btn) { btn.disabled = false; btn.textContent = original; }
-  }
+  // Offre PRO supprimée : plus aucun paiement. Tous les outils sont gratuits.
+  return;
 }
 
 /** Ouvre le portail client Dodo Payments (gérer/annuler l'abonnement) */
@@ -357,15 +344,8 @@ function checkPROLimits(toolId) {
 /* ---------------------------------------------------------------------- */
 
 function openProModal(toolId) {
-  const overlay = document.getElementById('pro-overlay');
-  const sub = document.getElementById('pro-modal-sub');
-  if (sub) {
-    sub.textContent = (toolId && TOOL_LABELS[toolId])
-      ? _tr('Vous avez atteint la limite gratuite du jour pour « ') + _tr(TOOL_LABELS[toolId]) + _tr(' ». Passez en PRO pour un usage illimité.')
-      : _tr('Débloquez un usage illimité de tous les outils, sans limite quotidienne.');
-  }
-  ensureRestoreLink();
-  if (overlay) { overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  // Offre PRO supprimée : tous les outils sont gratuits. Cette fenêtre ne s'ouvre plus.
+  return;
 }
 function closeProModal() {
   const overlay = document.getElementById('pro-overlay');
@@ -453,6 +433,14 @@ function renderUsageBanners() {
 /* ---------------------------------------------------------------------- */
 
 (function initProSystem() {
+  // Offre PRO supprimée : on masque tout élément PRO restant (bouton « Passer en PRO »
+  // du menu, badge, fenêtre modale) sur l'ensemble des pages, sans avoir à les éditer.
+  try {
+    const s = document.createElement('style');
+    s.textContent = '.pro-cta-nav,.pro-manage-nav,.pro-badge,.pro-overlay{display:none!important}';
+    (document.head || document.documentElement).appendChild(s);
+  } catch (e) {}
+
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get(PRO_CONFIG.successParam);
 
