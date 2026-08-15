@@ -55,6 +55,25 @@ function applyLang(lang){
 }
 function toggleLang(){
   applyLang(currentLang==='en' ? 'fr' : 'en');
+ "Pourquoi choisir outilsweb-pro ?":"Why choose outilsweb-pro?",
+ "Des outils simples, gratuits et respectueux de votre vie privée, pensés pour aller vite.":"Simple, free, privacy-friendly tools built to be fast.",
+ "🔒 La confidentialité d'abord":"🔒 Privacy first",
+ "Vos documents et images sont traités directement dans votre navigateur. Rien n'est téléversé, rien n'est stocké sur nos serveurs.":"Your documents and images are processed directly in your browser. Nothing is uploaded, nothing is stored on our servers.",
+ "⚡ Rapide et sans friction":"⚡ Fast and frictionless",
+ "Pas de compte, pas d'email, pas d'attente. Ouvrez un outil, obtenez votre résultat, téléchargez — en quelques secondes.":"No account, no email, no waiting. Open a tool, get your result, download — in seconds.",
+ "🌍 Tout au même endroit":"🌍 Everything in one place",
+ "Dix outils du quotidien — PDF, factures, images, QR codes, mots de passe et plus — réunis sur un seul site gratuit.":"Ten everyday tools — PDF, invoices, images, QR codes, passwords and more — on a single free site.",
+ "Questions fréquentes":"Frequently asked questions",
+ "Les outils sont-ils vraiment gratuits ?":"Are the tools really free?",
+ "Oui. Les 10 outils sont accessibles gratuitement, sans inscription. Une option PRO facultative (4,99 $/mois) débloque un usage illimité pour les gros utilisateurs.":"Yes. All 10 tools are free to use, with no sign-up. An optional PRO plan ($4.99/month) unlocks unlimited use for heavy users.",
+ "Dois-je installer un logiciel ou créer un compte ?":"Do I need to install software or create an account?",
+ "Non. Tout fonctionne directement dans votre navigateur, sur ordinateur, tablette ou smartphone. Aucune installation, aucun compte.":"No. Everything runs directly in your browser, on computer, tablet or smartphone. No installation, no account.",
+ "Mes fichiers sont-ils envoyés sur internet ?":"Are my files sent over the internet?",
+ "Non : pour la plupart des outils (PDF, images, QR code, mot de passe), tout est traité localement sur votre appareil. Vos fichiers ne quittent jamais votre navigateur.":"No — for most tools (PDF, images, QR code, password), everything is processed locally on your device. Your files never leave your browser.",
+ "Le site fonctionne-t-il sur mobile ?":"Does the site work on mobile?",
+ "Oui, le site est optimisé pour mobile et peut même être installé comme une application (PWA) depuis votre navigateur pour un accès rapide.":"Yes, the site is mobile-optimized and can even be installed as an app (PWA) from your browser for quick access.",
+ "Quelle est la différence entre la version gratuite et PRO ?":"What's the difference between the free version and PRO?",
+ "La version gratuite couvre les besoins quotidiens avec une limite raisonnable par jour. La version PRO retire toutes les limites, autorise des fichiers plus volumineux et supprime la publicité.":"The free version covers everyday needs with a reasonable daily limit. PRO removes all limits, allows larger files and removes ads.",
 }
 document.addEventListener('DOMContentLoaded', ()=>{
   applyLang(currentLang);
