@@ -425,6 +425,15 @@
   .trust-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
   .trust-row span{background:var(--surface-2);border:1px solid var(--line);padding:8px 14px;border-radius:12px;font-size:13px;color:var(--muted)}
   @media(max-width:640px){.trust-row{gap:8px}}
+
+  /* Section accueil enrichie */
+  .home-section-title{font-size:26px;font-weight:700;color:var(--ink);margin:56px 0 8px;letter-spacing:-0.3px}
+  .home-section-sub{color:var(--muted);font-size:15px;margin:0 0 20px}
+  .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+  .why-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px}
+  .why-card h3{font-size:17px;font-weight:600;color:var(--ink);margin:0 0 8px}
+  .why-card p{color:var(--muted);line-height:1.6;font-size:15px;margin:0}
+  @media(max-width:760px){.why-grid{grid-template-columns:1fr}}
 </style>
 <script type="application/ld+json">
 {
@@ -560,6 +569,48 @@
         <p data-i18n>Traduisez entre plus de 25 langues.</p>
         <span class="go" data-i18n>Ouvrir →</span>
       </a>
+    </div>
+      <!-- ===== POURQUOI NOUS ===== -->
+    <h2 class="home-section-title" data-i18n>Pourquoi choisir outilsweb-pro ?</h2>
+    <p class="home-section-sub" data-i18n>Des outils simples, gratuits et respectueux de votre vie privée, pensés pour aller vite.</p>
+    <div class="why-grid">
+      <div class="why-card">
+        <h3 data-i18n>🔒 La confidentialité d'abord</h3>
+        <p data-i18n>Vos documents et images sont traités directement dans votre navigateur. Rien n'est téléversé, rien n'est stocké sur nos serveurs.</p>
+      </div>
+      <div class="why-card">
+        <h3 data-i18n>⚡ Rapide et sans friction</h3>
+        <p data-i18n>Pas de compte, pas d'email, pas d'attente. Ouvrez un outil, obtenez votre résultat, téléchargez — en quelques secondes.</p>
+      </div>
+      <div class="why-card">
+        <h3 data-i18n>🌍 Tout au même endroit</h3>
+        <p data-i18n>Dix outils du quotidien — PDF, factures, images, QR codes, mots de passe et plus — réunis sur un seul site gratuit.</p>
+      </div>
+    </div>
+
+    <!-- ===== FAQ ACCUEIL ===== -->
+    <h2 class="home-section-title" data-i18n>Questions fréquentes</h2>
+    <div class="faq">
+      <div class="faq-item">
+        <div class="faq-q" data-i18n>Les outils sont-ils vraiment gratuits ?</div>
+        <div class="faq-a" data-i18n>Oui. Les 10 outils sont accessibles gratuitement, sans inscription. Une option PRO facultative (4,99 $/mois) débloque un usage illimité pour les gros utilisateurs.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n>Dois-je installer un logiciel ou créer un compte ?</div>
+        <div class="faq-a" data-i18n>Non. Tout fonctionne directement dans votre navigateur, sur ordinateur, tablette ou smartphone. Aucune installation, aucun compte.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n>Mes fichiers sont-ils envoyés sur internet ?</div>
+        <div class="faq-a" data-i18n>Non : pour la plupart des outils (PDF, images, QR code, mot de passe), tout est traité localement sur votre appareil. Vos fichiers ne quittent jamais votre navigateur.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n>Le site fonctionne-t-il sur mobile ?</div>
+        <div class="faq-a" data-i18n>Oui, le site est optimisé pour mobile et peut même être installé comme une application (PWA) depuis votre navigateur pour un accès rapide.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n>Quelle est la différence entre la version gratuite et PRO ?</div>
+        <div class="faq-a" data-i18n>La version gratuite couvre les besoins quotidiens avec une limite raisonnable par jour. La version PRO retire toutes les limites, autorise des fichiers plus volumineux et supprime la publicité.</div>
+      </div>
     </div>
   </section>
 
