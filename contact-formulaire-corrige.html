@@ -1,0 +1,75 @@
+<!-- ============================================================= -->
+<!--  CORRECTIF FORMULAIRE CONTACT — contact.html                  -->
+<!-- ============================================================= -->
+
+<!-- 1) REMPLACER la ligne du champ email : -->
+<!--    AVANT :                                                     -->
+<!--    <input type="text" id="c-email" placeholder="vous@exemple.com"> -->
+<!--    APRÈS :                                                     -->
+<input type="email" id="c-email" placeholder="vous@exemple.com" autocomplete="email">
+
+
+<!-- 2) REMPLACER tout le <script>...</script> en bas de page par : -->
+
+<script>
+function sendContact(){
+  var name=document.getElementById('c-name').value.trim();
+  var email=document.getElementById('c-email').value.trim();
+  var msg=document.getElementById('c-msg').value.trim();
+  var status=document.getElementById('c-status');
+  var btn=document.getElementById('c-btn');
+
+  // Vérification du message
+  if(!msg){
+    status.style.color='#c0392b';
+    status.textContent='Merci d\'écrire un message.';
+    return;
+  }
+
+  // Vérification du format de l'email (si renseigné)
+  var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if(email && !emailOk){
+    status.style.color='#c0392b';
+    status.textContent='Merci de vérifier votre adresse email.';
+    return;
+  }
+
+  btn.disabled=true;
+  btn.textContent='Envoi en cours…';
+  status.textContent='';
+
+  fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({
+      access_key: 'c8d131b4-55f1-4893-b3df-746719dc73e1',
+      subject: 'Message de ' + (name || 'un visiteur') + ' — outilsweb-pro.com',
+      name: name || 'Visiteur anonyme',
+      email: email || 'non renseigné',
+      replyto: email || undefined,
+      message: msg
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    btn.disabled=false;
+    btn.textContent='Envoyer le message';
+    if(data.success){
+      status.style.color='#2e7d32';
+      status.textContent='Message envoyé ! Merci, nous vous répondrons rapidement.';
+      document.getElementById('c-name').value='';
+      document.getElementById('c-email').value='';
+      document.getElementById('c-msg').value='';
+    } else {
+      status.style.color='#c0392b';
+      status.textContent='Une erreur est survenue. Réessayez ou écrivez à contact@outilsweb-pro.com.';
+    }
+  })
+  .catch(function(){
+    btn.disabled=false;
+    btn.textContent='Envoyer le message';
+    status.style.color='#c0392b';
+    status.textContent='Une erreur est survenue. Réessayez ou écrivez à contact@outilsweb-pro.com.';
+  });
+}
+</script>

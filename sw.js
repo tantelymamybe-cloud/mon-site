@@ -3,21 +3,15 @@
    --------------------------------------------------------------------------
    STRATÉGIE : « réseau d'abord » pour les fichiers du site.
 
-   L'ancienne version utilisait « cache d'abord » : une fois un fichier mis en
-   cache (i18n.js, une page HTML…), le navigateur servait indéfiniment cette
-   copie, même après un nouveau déploiement. Les mises à jour n'arrivaient
-   donc jamais chez les visiteurs déjà venus — y compris après un Ctrl+F5,
-   puisque le service worker intercepte la requête avant le réseau.
+   On tente le réseau en premier (donc toujours la dernière version), et on ne
+   retombe sur le cache qu'en cas de coupure de connexion. Le site reste
+   utilisable hors ligne, mais n'est plus jamais figé.
 
-   Désormais : on tente le réseau en premier (donc toujours la dernière
-   version), et on ne retombe sur le cache qu'en cas de coupure de connexion.
-   Le site reste utilisable hors ligne, mais n'est plus jamais figé.
-
-   ⚠️ À CHAQUE DÉPLOIEMENT IMPORTANT : incrémentez CACHE_NAME (v2 -> v3…).
+   ⚠️ À CHAQUE DÉPLOIEMENT IMPORTANT : incrémentez CACHE_NAME (v3 -> v4…).
       Cela supprime l'ancien cache et garantit une remise à zéro propre.
    ========================================================================== */
 
-const CACHE_NAME = 'outilsweb-pro-v2';
+const CACHE_NAME = 'outilsweb-pro-v3';
 
 const APP_SHELL = [
   '/',
@@ -27,8 +21,8 @@ const APP_SHELL = [
   '/guides.html',
   '/privacy.html',
   '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/icon-512.png',
+  '/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', (event) => {
