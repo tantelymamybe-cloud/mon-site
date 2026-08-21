@@ -411,6 +411,14 @@
   .trust-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
   .trust-row span{background:var(--surface-2);border:1px solid var(--line);padding:7px 14px;border-radius:10px;font-size:13px;color:var(--muted)}
   @media(max-width:640px){.trust-row{gap:8px}}
+
+.btn-ghost{background:var(--surface-2,#1a2131);color:var(--ink,#F5F7FC);border:1px solid var(--line,#26304A);
+  font-weight:600;font-size:14px;padding:9px 14px;border-radius:10px;cursor:pointer;transition:.15s}
+.btn-ghost:hover{border-color:var(--turquoise,#2DD4BF);background:var(--surface,#121826)}
+#img-controls .field label{display:block;margin-bottom:7px;font-weight:600;font-size:14px}
+#img-controls select,#img-controls input[type=number]{width:100%;box-sizing:border-box;
+  font-family:inherit;font-size:15px;padding:11px 13px;border-radius:11px;
+  background:var(--surface,#121826);color:var(--ink,#F5F7FC);border:1px solid var(--line,#26304A)}
 </style>
   <script defer data-domain="outilsweb-pro.com" src="https://plausible.io/js/script.js"></script>
 </head>
@@ -451,16 +459,47 @@
     <div class="card">
       <div class="drop" id="img-drop" data-i18n-html data-fr="Cliquez ou glissez une image ici&lt;br&gt;&lt;strong&gt;JPG, PNG, WebP&lt;/strong&gt;">Cliquez ou glissez une image ici<br><strong>JPG, PNG, WebP</strong></div>
       <input type="file" id="img-input" accept="image/*" hidden>
-      <div class="field" style="margin-top:18px">
-        <label>Qualité : <span id="img-qval">80</span>%</label>
-        <input type="range" id="img-quality" min="10" max="100" value="80">
+
+      <div id="img-controls" style="display:none">
+
+        <div class="field" style="margin-top:18px">
+          <label>Format de sortie</label>
+          <select id="img-format">
+            <option value="image/jpeg">JPG — photo légère</option>
+            <option value="image/webp">WebP — plus léger encore</option>
+            <option value="image/png">PNG — sans perte / transparence</option>
+          </select>
+        </div>
+
+        <div class="field" id="img-quality-field">
+          <label>Qualité : <span id="img-qval">80</span>%</label>
+          <input type="range" id="img-quality" min="10" max="100" value="80">
+        </div>
+
+        <div class="field">
+          <label>Largeur (px) — la hauteur suit automatiquement</label>
+          <input type="number" id="img-width" min="1" placeholder="ex : 1280" style="width:100%;box-sizing:border-box">
+        </div>
+
+        <div class="field">
+          <label>Transformations</label>
+          <div class="btn-row">
+            <button type="button" class="btn btn-ghost" onclick="rotateImg(-90)" title="Pivoter à gauche">⟲ Gauche</button>
+            <button type="button" class="btn btn-ghost" onclick="rotateImg(90)" title="Pivoter à droite">⟳ Droite</button>
+            <button type="button" class="btn btn-ghost" onclick="flipImg('h')" title="Miroir horizontal">⇋ Miroir H</button>
+            <button type="button" class="btn btn-ghost" onclick="flipImg('v')" title="Miroir vertical">⇅ Miroir V</button>
+            <button type="button" class="btn btn-ghost" onclick="resetImg()" title="Réinitialiser">↺ Réinitialiser</button>
+          </div>
+        </div>
+
       </div>
+
       <div class="preview" id="img-preview"></div>
       <div id="img-stats" class="result"></div>
       <div class="btn-row" style="margin-top:18px">
-        <button class="btn" id="img-dl" onclick="downloadImg()" disabled data-i18n>Télécharger l'image compressée</button>
+        <button class="btn" id="img-dl" onclick="downloadImg()" disabled data-i18n>Télécharger l'image</button>
       </div>
-      <div class="share-bar" data-tool="img" data-title="Compresseur d'images gratuit"></div>
+      <div class="share-bar" data-tool="img" data-title="Compresseur et éditeur d'images gratuit"></div>
     </div>
     <div class="faq">
       <h3 data-i18n>Questions fréquentes — Compresseur d'images</h3>
@@ -995,10 +1034,13 @@ function generateInvoicePdf(){
   doc.save((num!=='—'?num:'facture')+'.pdf');
 }
 
-/* ---------- 2. Image compressor ---------- */
-let imgBlob=null,imgName='image';
+/* ---------- 2. Image compressor & éditeur ---------- */
+let imgBlob=null,imgName='image',imgExt='jpg';
+let imgRotate=0,imgFlipH=false,imgFlipV=false;
 const imgDrop=document.getElementById('img-drop'),imgInput=document.getElementById('img-input');
 const imgQ=document.getElementById('img-quality');
+const imgFormat=document.getElementById('img-format');
+const imgWidth=document.getElementById('img-width');
 if(imgDrop&&imgInput){
   imgDrop.onclick=()=>imgInput.click();
   imgInput.onchange=e=>loadImg(e.target.files[0]);
@@ -1008,28 +1050,88 @@ if(imgDrop&&imgInput){
   }));
 }
 if(imgQ)imgQ.oninput=()=>{document.getElementById('img-qval').textContent=imgQ.value;if(window._imgSource)compressImg();};
+if(imgFormat)imgFormat.onchange=()=>{
+  // PNG = sans perte : la qualité n'a pas d'effet, on masque le curseur
+  const qf=document.getElementById('img-quality-field');
+  if(qf)qf.style.display=(imgFormat.value==='image/png')?'none':'';
+  if(window._imgSource)compressImg();
+};
+let _widthTimer=null;
+if(imgWidth)imgWidth.oninput=()=>{clearTimeout(_widthTimer);_widthTimer=setTimeout(()=>{if(window._imgSource)compressImg();},350);};
+
 function loadImg(file){
-  if(!file||!file.type.startsWith('image/'))return;
+  if(!file||!file.type.startsWith('image/')){alert(_tr('Veuillez choisir une image valide (JPG, PNG ou WebP).'));return;}
   imgName=file.name.replace(/\.[^.]+$/,'');
   window._origSize=file.size;
+  imgRotate=0;imgFlipH=false;imgFlipV=false;
   const r=new FileReader();
-  r.onload=e=>{const im=new Image();im.onload=()=>{window._imgSource=im;compressImg();};im.src=e.target.result;};
+  r.onload=e=>{const im=new Image();im.onload=()=>{
+    window._imgSource=im;
+    if(imgWidth&&!imgWidth.value)imgWidth.placeholder='ex : '+im.width;
+    const ctrls=document.getElementById('img-controls');if(ctrls)ctrls.style.display='';
+    compressImg();
+  };im.onerror=()=>alert(_tr('Impossible de lire cette image.'));im.src=e.target.result;};
   r.readAsDataURL(file);
 }
+
+function rotateImg(deg){if(!window._imgSource)return;imgRotate=(imgRotate+deg+360)%360;compressImg();}
+function flipImg(axis){if(!window._imgSource)return;if(axis==='h')imgFlipH=!imgFlipH;else imgFlipV=!imgFlipV;compressImg();}
+function resetImg(){if(!window._imgSource)return;imgRotate=0;imgFlipH=false;imgFlipV=false;if(imgWidth)imgWidth.value='';if(imgQ){imgQ.value=80;document.getElementById('img-qval').textContent='80';}compressImg();}
+
 function compressImg(){
-  const im=window._imgSource;const c=document.createElement('canvas');
-  c.width=im.width;c.height=im.height;c.getContext('2d').drawImage(im,0,0);
+  const im=window._imgSource;if(!im)return;
+  const fmt=imgFormat?imgFormat.value:'image/jpeg';
+  const quality=(imgQ?imgQ.value:80)/100;
+
+  // Dimensions de base (avec redimensionnement éventuel)
+  let sw=im.width, sh=im.height;
+  const targetW=imgWidth&&+imgWidth.value>0?Math.min(+imgWidth.value,im.width*4):0;
+  if(targetW){const ratio=targetW/im.width;sw=Math.round(targetW);sh=Math.round(im.height*ratio);}
+
+  // Le canvas s'adapte à la rotation (90/270 => on inverse largeur/hauteur)
+  const swap=(imgRotate===90||imgRotate===270);
+  const c=document.createElement('canvas');
+  c.width=swap?sh:sw;c.height=swap?sw:sh;
+  const ctx=c.getContext('2d');
+
+  // PNG => fond transparent ; JPG/WebP => fond blanc (pas de noir sur la transparence)
+  if(fmt==='image/jpeg'){ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);}
+
+  ctx.save();
+  ctx.translate(c.width/2,c.height/2);
+  ctx.rotate(imgRotate*Math.PI/180);
+  ctx.scale(imgFlipH?-1:1,imgFlipV?-1:1);
+  ctx.drawImage(im,-sw/2,-sh/2,sw,sh);
+  ctx.restore();
+
   c.toBlob(b=>{
+    if(!b){alert(_tr('Ce format n\'est pas pris en charge par votre navigateur.'));return;}
     imgBlob=b;
-    document.getElementById('img-preview').innerHTML='<img src="'+URL.createObjectURL(b)+'">';
+    imgExt=fmt==='image/png'?'png':(fmt==='image/webp'?'webp':'jpg');
+    document.getElementById('img-preview').innerHTML='<img src="'+URL.createObjectURL(b)+'" alt="'+_tr('Aperçu')+'">';
     const stats=document.getElementById('img-stats');
-    const gain=Math.max(0,Math.round((1-b.size/window._origSize)*100));
-    stats.innerHTML=_tr('Original : ')+'<b>'+fmtSize(window._origSize)+'</b> → '+_tr('Compressé : ')+'<b>'+fmtSize(b.size)+'</b> \u00a0(-'+gain+'%)';
+    const gain=Math.round((1-b.size/window._origSize)*100);
+    const gainTxt=gain>0?' \u00a0(-'+gain+'%)':(gain<0?' \u00a0(+'+Math.abs(gain)+'%)':'');
+    stats.innerHTML=_tr('Original : ')+'<b>'+fmtSize(window._origSize)+'</b> → '+_tr('Résultat : ')+'<b>'+fmtSize(b.size)+'</b>'+gainTxt+
+      '<br><span style="color:var(--muted);font-size:13px">'+c.width+' × '+c.height+' px — '+imgExt.toUpperCase()+'</span>';
     stats.classList.add('show');
     document.getElementById('img-dl').disabled=false;
-  },'image/jpeg',imgQ.value/100);
+  },fmt,fmt==='image/png'?undefined:quality);
 }
-function downloadImg(){if(!checkPROLimits('img'))return;if(!imgBlob)return;const a=document.createElement('a');a.href=URL.createObjectURL(imgBlob);a.download=imgName+'-compresse.jpg';a.click();}
+
+function downloadImg(){
+  if(!checkPROLimits('img'))return;
+  if(!imgBlob){alert(_tr('Chargez d\'abord une image.'));return;}
+  const url=URL.createObjectURL(imgBlob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=imgName+'-outilsweb-pro.'+imgExt;
+  document.body.appendChild(a);   // indispensable pour Firefox et certains mobiles
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+
 function fmtSize(b){return b<1024?b+' o':b<1048576?(b/1024).toFixed(1)+' Ko':(b/1048576).toFixed(2)+' Mo';}
 
 /* ---------- 3. QR code ---------- */
